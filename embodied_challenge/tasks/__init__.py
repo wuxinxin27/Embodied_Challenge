@@ -32,3 +32,6 @@ from .manipulate_pipette.manipulate_pipette import (
 from .drawer_open_place.drawer_open_place_object import (
     DrawerOpenPlaceObjectEnv,
 )
+from .beaker_mixer.beaker_mixer import (
+    BeakerMixerEnv,
+)
