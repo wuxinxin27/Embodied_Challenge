@@ -252,9 +252,9 @@
                 "fpath": "ToyDuck/toy_duck.glb"
             },
             "body_scale": [
-                0.45,
-                0.45,
-                0.45
+                0.395,
+                0.395,
+                0.395
             ],
             "init_pos": [
                 0.70,
@@ -286,7 +286,7 @@
                 "fpath": "SlidingBoxDrawer/SlidingBoxDrawer.urdf",
                 "uid": "drawer",
                 "init_pos": [
-                    0.88,
+                    0.84,
                     -0.10,
                     0.755
                 ],
@@ -296,12 +296,12 @@
                 180
             ],
             "attrs": {
-                "static_friction": 1.5,
-                "dynamic_friction": 1.5
+                "static_friction": 3.0,
+                "dynamic_friction": 3.0
             },
             "drive_pros": {
                 "stiffness": 0,
-                "damping": 0
+                "damping": 1.5
             }
         }
     ]

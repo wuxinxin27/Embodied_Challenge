@@ -340,11 +340,11 @@ class DrawerOpenPlaceObjectEnv(EmbodiedEnv):
         right_reference_pose_base = self._fk_pose("right_arm", right_qpos_start_base)
         
         # ==========================================
-        # Right Arm: Adapt to the drawer's current position (x=0.88, y=-0.10)
+        # Right Arm: Adapt to the drawer's current position (x=0.82, y=-0.10)
         # ==========================================
         # Offsets are relative to the base configuration (drawer x=0.90, y=0.10)
         right_reference_pose = right_reference_pose_base.clone()
-        right_reference_pose[0, 3] -= 0.02 # x offset (-0.02m)
+        right_reference_pose[0, 3] -= 0.06 # x offset (-0.06m to match new drawer pos 0.84)
         right_reference_pose[1, 3] += 0.20 # y offset (+0.20m)
         
         # Compute IK to get the adapted joint angles
@@ -363,7 +363,8 @@ class DrawerOpenPlaceObjectEnv(EmbodiedEnv):
         right_xpos_mid[0, 3] += 0.06
         right_xpos_pull = right_xpos_begin.clone()
         # Reduce pull distance to avoid excessive stretch and jitter
-        right_xpos_pull[0, 3] -= 0.11
+        # [Updated] Increased magnitude from -0.11 to -0.16 to pull the drawer further
+        right_xpos_pull[0, 3] -= 0.120
 
         plan_result_to_handle = self._require_plan(
             self._plan_linear_eef_motion(
@@ -398,9 +399,11 @@ class DrawerOpenPlaceObjectEnv(EmbodiedEnv):
             float(duck_pos[2]),
         )
         # Safe z-height for moving duck across the drawer
-        safe_z = oz + 0.22
+        # [Updated] Increased lift height to ensure duck clears drawer edges
+        safe_z = oz + 0.24
         left_pregrasp_z = oz + 0.10  # Pre-grasp height (10cm above duck)
-        left_grasp_z = oz + 0.04     # Grasp height (aligned with duck neck/body)
+        # [Updated] Lowered grasp height from 0.04 to 0.03 because duck size scaled down to 0.40
+        left_grasp_z = oz + 0.035     # Grasp height (aligned with duck neck/body)
 
         # Left arm initial target pose for grasping the duck
         left_seed_qpos = torch.tensor(
@@ -497,10 +500,12 @@ class DrawerOpenPlaceObjectEnv(EmbodiedEnv):
         
         # Calculate candidates for hover poses above the drawer
         # Set placement coordinates based on the opened drawer's position
-        place_x = 0.705
+        # Adjusted X from 0.655 to 0.685 to place duck further away from the robot
+        place_x = 0.680
         place_y = -0.05
-        place_z_hover = safe_z
-        place_z_drop = 1.05 # Higher drop point to let duck fall naturally
+        # Decouple hover height from safe_z to prevent IK failures when reaching forward
+        place_z_hover = min(safe_z, 1.05)
+        place_z_drop = 1.05
         
         # Generate candidates for placing hover pose
         left_place_hover_candidates = []
