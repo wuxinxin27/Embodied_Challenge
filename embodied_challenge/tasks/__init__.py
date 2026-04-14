@@ -29,8 +29,9 @@ from .sample_loading_duel.sample_loading_duel import (
 from .manipulate_pipette.manipulate_pipette import (
     ManipulatePipetteEnv,
 )
-from .drawer_open_place.drawer_open_place_object import (
-    DrawerOpenPlaceObjectEnv,
+from .drawer_open_place.drawer_open_place import (
+    DrawerOpenPlaceAgentEnv,
+    DrawerOpenPlaceEnv,
 )
 from .beaker_mixer.beaker_mixer import (
     BeakerMixerEnv,
