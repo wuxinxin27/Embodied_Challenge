@@ -93,63 +93,41 @@
                 }
             },
             {
-                "right_arm_cube_grasp": {
+                "right_arm_pipette_grasp": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "cube_grasp_pose",
-                                "dst_key": "right_arm_cube_grasp_pose",
+                                "src_key": "pipette_base_pose",
+                                "dst_key": "right_arm_pipette_grasp_pose",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "no_validation",
                                         "kwargs": {},
                                         "pass_processes": [
                                             {
-                                                "name": "get_aligned_pose",
-                                                "kwargs": {
-                                                    "align_vector": [0, 0, -1],
-                                                    "pose_axis": "x"
-                                                }
-                                            },
-                                            {
-                                                "name": "get_aligned_pose",
-                                                "kwargs": {
-                                                    "align_vector": [0, 0, -1],
-                                                    "pose_axis": "y"
-                                                }
-                                            },
-                                            {
-                                                "name": "get_rotated_pose",
-                                                "kwargs": {
-                                                    "rot_angle": 90,
-                                                    "rot_axis": "y",
-                                                    "mode": "intrinsic",
-                                                    "degrees": true
-                                                }
-                                            },
-                                            {
                                                 "name": "get_rotated_pose",
                                                 "kwargs": {
                                                     "rot_angle": 180,
-                                                    "rot_axis": "z",
+                                                    "rot_axis": "x",
                                                     "mode": "intrinsic",
                                                     "degrees": true
-                                                }
-                                            },
-                                            {
-                                                "name": "get_aligned_pose",
-                                                "kwargs": {
-                                                    "align_vector": [0, 0, -1],
-                                                    "pose_axis": "z"
                                                 }
                                             },
                                             {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": -0.0044,
+                                                    "offset_value": -0.03,
                                                     "direction": "z",
                                                     "mode": "extrinsic"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": "env.affordance_datas['pipette_grasp_offset']",
+                                                    "direction": "z",
+                                                    "mode": "intrinsic"
                                                 }
                                             }
                                         ]
@@ -157,8 +135,8 @@
                                 ]
                             },
                             {
-                                "src_key": "right_arm_cube_grasp_pose",
-                                "dst_key": "right_arm_cube_pre1_pose",
+                                "src_key": "right_arm_pipette_grasp_pose",
+                                "dst_key": "right_arm_pipette_pre1_pose",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "no_validation",
@@ -189,13 +167,13 @@
                 }
             },
             {
-                "right_arm_cube_pre1_qpos": {
+                "right_arm_pipette_pre1_qpos": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "right_arm_cube_pre1_pose",
-                                "dst_key": "right_arm_cube_pre1_qpos",
+                                "src_key": "right_arm_pipette_pre1_pose",
+                                "dst_key": "right_arm_pipette_pre1_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "get_ik_ret",
@@ -232,19 +210,19 @@
                 }
             },
             {
-                "right_arm_cube_grasp_qpos": {
+                "right_arm_pipette_grasp_qpos": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "right_arm_cube_grasp_pose",
-                                "dst_key": "right_arm_cube_grasp_qpos",
+                                "src_key": "right_arm_pipette_grasp_pose",
+                                "dst_key": "right_arm_pipette_grasp_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "get_ik_ret",
                                         "kwargs": {
                                             "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['right_arm_cube_pre1_qpos']",
+                                            "qpos_seed": "env.affordance_datas['right_arm_pipette_pre1_qpos']",
                                             "control_part": "right_arm"
                                         },
                                         "pass_processes": [
@@ -252,7 +230,7 @@
                                                 "name": "get_ik_qpos",
                                                 "kwargs": {
                                                     "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['right_arm_cube_pre1_qpos']",
+                                                    "qpos_seed": "env.affordance_datas['right_arm_pipette_pre1_qpos']",
                                                     "control_part": "right_arm"
                                                 }
                                             }
@@ -276,13 +254,13 @@
                 }
             },
             {
-                "right_arm_cube_up1_pose": {
+                "right_arm_pipette_up1_pose": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "right_arm_cube_grasp_pose",
-                                "dst_key": "right_arm_cube_up1_pose",
+                                "src_key": "right_arm_pipette_grasp_pose",
+                                "dst_key": "right_arm_pipette_up1_pose",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "no_validation",
@@ -295,6 +273,14 @@
                                                     "direction": "z",
                                                     "mode": "extrinsic"
                                                 }
+                                            },
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": -0.1,
+                                                    "direction": "x",
+                                                    "mode": "extrinsic"
+                                                }
                                             }
                                         ]
                                     }
@@ -305,19 +291,19 @@
                 }
             },
             {
-                "right_arm_cube_up1_qpos": {
+                "right_arm_pipette_up1_qpos": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "right_arm_cube_up1_pose",
-                                "dst_key": "right_arm_cube_up1_qpos",
+                                "src_key": "right_arm_pipette_up1_pose",
+                                "dst_key": "right_arm_pipette_up1_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "get_ik_ret",
                                         "kwargs": {
                                             "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['right_arm_cube_grasp_qpos']",
+                                            "qpos_seed": "env.affordance_datas['right_arm_pipette_grasp_qpos']",
                                             "control_part": "right_arm"
                                         },
                                         "pass_processes": [
@@ -325,7 +311,7 @@
                                                 "name": "get_ik_qpos",
                                                 "kwargs": {
                                                     "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['right_arm_cube_grasp_qpos']",
+                                                    "qpos_seed": "env.affordance_datas['right_arm_pipette_grasp_qpos']",
                                                     "control_part": "right_arm"
                                                 }
                                             }
@@ -348,28 +334,148 @@
                 }
             },
             {
-                "right_arm_aim_rack_qpos": {
-                    "name": "generate_right_arm_aim_rack_qpos",
+                "right_arm_aim_beaker1_qpos": {
+                    "name": "generate_right_arm_aim_beaker1_qpos",
                     "kwargs": {}
                 }
             },
             {
-                "right_arm_cube_up2_pose": {
+                "right_arm_pipette_beaker1_pre_pose": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "right_arm_cube_up1_pose",
-                                "dst_key": "right_arm_cube_up2_pose",
+                                "src_key": "right_arm_pipette_up1_pose",
+                                "dst_key": "right_arm_pipette_beaker1_pre_pose",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "no_validation",
                                         "kwargs": {},
                                         "pass_processes": [
                                             {
+                                                "name": "get_replaced_pose",
+                                                "kwargs":{
+                                                    "pose_replace_value": "env.affordance_datas['beaker1_pose'][:3,3]",
+                                                    "axis_str_replace": "xyz"
+                                                }
+                                            },
+                                            {
                                                 "name": "get_rotation_replaced_pose",
                                                 "kwargs": {
-                                                    "rotation_value": "env.affordance_datas['right_arm_aim_rack_qpos'][0]",
+                                                    "rotation_value": "env.affordance_datas['right_arm_aim_beaker1_qpos'][0]",
+                                                    "rot_axis": "z",
+                                                    "mode": "intrinsic"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotated_pose",
+                                                "kwargs": {
+                                                    "rot_angle": -90,
+                                                    "rot_axis": "y",
+                                                    "mode": "intrinsic",
+                                                    "degrees": true
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotated_pose",
+                                                "kwargs": {
+                                                    "rot_angle": 180,
+                                                    "rot_axis": "x",
+                                                    "mode": "intrinsic",
+                                                    "degrees": true
+                                                }
+                                            },
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": 0.4,
+                                                    "direction": "z",
+                                                    "mode": "extrinsic"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": "env.affordance_datas['pipette_grasp_offset']",
+                                                    "direction": "z",
+                                                    "mode": "intrinsic"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "right_arm_pipette_beaker1_pre_qpos": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "right_arm_pipette_beaker1_pre_pose",
+                                "dst_key": "right_arm_pipette_beaker1_pre_qpos",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "get_ik_ret",
+                                        "kwargs": {
+                                            "ik_func": "env.robot.compute_ik",
+                                            "qpos_seed": "env.affordance_datas['right_arm_aim_qpos']",
+                                            "control_part": "right_arm"
+                                        },
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_ik_qpos",
+                                                "kwargs": {
+                                                    "ik_func": "env.robot.compute_ik",
+                                                    "qpos_seed": "env.affordance_datas['right_arm_aim_qpos']",
+                                                    "control_part": "right_arm"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "is_qpos_flip",
+                                        "kwargs": {
+                                            "qpos_ref": "env.affordance_datas['right_arm_init_qpos']",
+                                            "qpos_ids": [3, 4],
+                                            "threshold": 3.455751918948773,
+                                            "mode": "delta",
+                                            "return_inverse": true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "right_arm_pipette_beaker1_pose": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "right_arm_pipette_up1_pose",
+                                "dst_key": "right_arm_pipette_beaker1_pose",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "no_validation",
+                                        "kwargs": {},
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_replaced_pose",
+                                                "kwargs":{
+                                                    "pose_replace_value": "env.affordance_datas['beaker1_pose'][:3,3]",
+                                                    "axis_str_replace": "xyz"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotation_replaced_pose",
+                                                "kwargs": {
+                                                    "rotation_value": "env.affordance_datas['right_arm_aim_beaker1_qpos'][0]",
                                                     "rot_axis": "z",
                                                     "mode": "intrinsic"
                                                 }
@@ -403,9 +509,9 @@
                                             {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": 0.1,
-                                                    "direction": "y",
-                                                    "mode": "extrinsic"
+                                                    "offset_value": "env.affordance_datas['pipette_grasp_offset']",
+                                                    "direction": "z",
+                                                    "mode": "intrinsic"
                                                 }
                                             }
                                         ]
@@ -417,19 +523,19 @@
                 }
             },
             {
-                "right_arm_cube_up2_qpos": {
+                "right_arm_pipette_beaker1_qpos": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "right_arm_cube_up2_pose",
-                                "dst_key": "right_arm_cube_up2_qpos",
+                                "src_key": "right_arm_pipette_beaker1_pose",
+                                "dst_key": "right_arm_pipette_beaker1_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "get_ik_ret",
                                         "kwargs": {
                                             "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['right_arm_cube_up1_qpos']",
+                                            "qpos_seed": "env.affordance_datas['right_arm_pipette_beaker1_pre_qpos']",
                                             "control_part": "right_arm"
                                         },
                                         "pass_processes": [
@@ -437,7 +543,7 @@
                                                 "name": "get_ik_qpos",
                                                 "kwargs": {
                                                     "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['right_arm_cube_up1_qpos']",
+                                                    "qpos_seed": "env.affordance_datas['right_arm_pipette_beaker1_pre_qpos']",
                                                     "control_part": "right_arm"
                                                 }
                                             }
@@ -460,20 +566,234 @@
                 }
             },
             {
-                "right_arm_compute_unoffset_for_exp":{
-                    "name": "compute_unoffset_for_exp",
+                "right_arm_aim_beaker2_qpos": {
+                    "name": "generate_right_arm_aim_beaker2_qpos",
+                    "kwargs": {}
+                }
+            },
+            {
+                "right_arm_pipette_beaker2_pre_pose": {
+                    "name": "generate_affordances_from_src",
                     "kwargs": {
-                        "pose_input_output_names_changes": {
-                            "cube_grasp_pose": {
-                                "output_pose_name":"cube_grasp_pose_object_unoffset",
-                                "pose_changes": [
-                                    ["framechange_extrinsic_inverse", "env.affordance_datas['cube_pose']"],
-                                    ["rotation_z_intrinsic_degrees", 90],
-                                    ["offset_-z_intrinsic", 0.025],
-                                    ["rotation_z_intrinsic_degrees", -90]
+                        "affordance_infos": [
+                            {
+                                "src_key": "right_arm_pipette_beaker1_pre_pose",
+                                "dst_key": "right_arm_pipette_beaker2_pre_pose",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "no_validation",
+                                        "kwargs": {},
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_replaced_pose",
+                                                "kwargs":{
+                                                    "pose_replace_value": "env.affordance_datas['beaker2_pose'][:3,3]",
+                                                    "axis_str_replace": "xyz"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotation_replaced_pose",
+                                                "kwargs": {
+                                                    "rotation_value": "env.affordance_datas['right_arm_aim_beaker2_qpos'][0]",
+                                                    "rot_axis": "z",
+                                                    "mode": "intrinsic"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotated_pose",
+                                                "kwargs": {
+                                                    "rot_angle": -90,
+                                                    "rot_axis": "y",
+                                                    "mode": "intrinsic",
+                                                    "degrees": true
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotated_pose",
+                                                "kwargs": {
+                                                    "rot_angle": 180,
+                                                    "rot_axis": "x",
+                                                    "mode": "intrinsic",
+                                                    "degrees": true
+                                                }
+                                            },
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": 0.4,
+                                                    "direction": "z",
+                                                    "mode": "extrinsic"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": "env.affordance_datas['pipette_grasp_offset']",
+                                                    "direction": "z",
+                                                    "mode": "intrinsic"
+                                                }
+                                            }
+                                        ]
+                                    }
                                 ]
                             }
-                        }
+                        ]
+                    }
+                }
+            },
+            {
+                "right_arm_pipette_beaker2_pose": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "right_arm_pipette_beaker2_pre_pose",
+                                "dst_key": "right_arm_pipette_beaker2_pose",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "no_validation",
+                                        "kwargs": {},
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_replaced_pose",
+                                                "kwargs":{
+                                                    "pose_replace_value": "env.affordance_datas['beaker2_pose'][:3,3]",
+                                                    "axis_str_replace": "xyz"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotation_replaced_pose",
+                                                "kwargs": {
+                                                    "rotation_value": "env.affordance_datas['right_arm_aim_beaker2_qpos'][0]",
+                                                    "rot_axis": "z",
+                                                    "mode": "intrinsic"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotated_pose",
+                                                "kwargs": {
+                                                    "rot_angle": -90,
+                                                    "rot_axis": "y",
+                                                    "mode": "intrinsic",
+                                                    "degrees": true
+                                                }
+                                            },
+                                            {
+                                                "name": "get_rotated_pose",
+                                                "kwargs": {
+                                                    "rot_angle": 180,
+                                                    "rot_axis": "x",
+                                                    "mode": "intrinsic",
+                                                    "degrees": true
+                                                }
+                                            },
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": 0.15,
+                                                    "direction": "z",
+                                                    "mode": "extrinsic"
+                                                }
+                                            },
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": "env.affordance_datas['pipette_grasp_offset']",
+                                                    "direction": "z",
+                                                    "mode": "intrinsic"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "right_arm_pipette_beaker2_pre_qpos": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "right_arm_pipette_beaker2_pre_pose",
+                                "dst_key": "right_arm_pipette_beaker2_pre_qpos",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "get_ik_ret",
+                                        "kwargs": {
+                                            "ik_func": "env.robot.compute_ik",
+                                            "qpos_seed": "env.affordance_datas['right_arm_aim_qpos']",
+                                            "control_part": "right_arm"
+                                        },
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_ik_qpos",
+                                                "kwargs": {
+                                                    "ik_func": "env.robot.compute_ik",
+                                                    "qpos_seed": "env.affordance_datas['right_arm_aim_qpos']",
+                                                    "control_part": "right_arm"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "is_qpos_flip",
+                                        "kwargs": {
+                                            "qpos_ref": "env.affordance_datas['right_arm_init_qpos']",
+                                            "qpos_ids": [3, 4],
+                                            "threshold": 3.455751918948773,
+                                            "mode": "delta",
+                                            "return_inverse": true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "right_arm_pipette_beaker2_qpos": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "right_arm_pipette_beaker2_pose",
+                                "dst_key": "right_arm_pipette_beaker2_qpos",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "get_ik_ret",
+                                        "kwargs": {
+                                            "ik_func": "env.robot.compute_ik",
+                                            "qpos_seed": "env.affordance_datas['right_arm_pipette_beaker2_pre_qpos']",
+                                            "control_part": "right_arm"
+                                        },
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_ik_qpos",
+                                                "kwargs": {
+                                                    "ik_func": "env.robot.compute_ik",
+                                                    "qpos_seed": "env.affordance_datas['right_arm_pipette_beaker2_pre_qpos']",
+                                                    "control_part": "right_arm"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "is_qpos_flip",
+                                        "kwargs": {
+                                            "qpos_ref": "env.affordance_datas['right_arm_init_qpos']",
+                                            "qpos_ids": [3, 4],
+                                            "threshold": 3.455751918948773,
+                                            "mode": "delta",
+                                            "return_inverse": true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 }
             }
@@ -509,36 +829,28 @@
                 }
             },
             {
-                "left_arm_aim_qpos": {
-                    "name": "generate_left_arm_aim_qpos",
+                "left_arm_aim_beaker1_qpos": {
+                    "name": "generate_left_arm_aim_beaker1_qpos",
                     "kwargs": {}
                 }
             },
             {
-                "left_arm_takeover_pose": {
+                "left_arm_pipette_beaker1_pose": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "right_arm_cube_up2_pose",
-                                "dst_key": "left_arm_takeover_pose",
+                                "src_key": "right_arm_pipette_beaker1_pose",
+                                "dst_key": "left_arm_pipette_beaker1_pose",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
-                                        "name":"no_validation",
+                                        "name": "no_validation",
                                         "kwargs": {},
                                         "pass_processes": [
                                             {
-                                                "name": "get_offset_pose",
-                                                "kwargs": {
-                                                    "offset_value": -0.08,
-                                                    "direction": "x",
-                                                    "mode": "intrinsic"
-                                                }
-                                            },
-                                            {
                                                 "name": "get_rotated_pose",
                                                 "kwargs": {
-                                                    "rot_angle": -100,
+                                                    "rot_angle": -120,
                                                     "rot_axis": "x",
                                                     "mode": "intrinsic",
                                                     "degrees": true
@@ -547,162 +859,10 @@
                                             {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": 0.008,
-                                                    "direction": "z",
-                                                    "mode": "intrinsic"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            },
-            {
-                "left_arm_takeover_pre_pose": {
-                    "name": "generate_affordances_from_src",
-                    "kwargs": {
-                        "affordance_infos": [
-                            {
-                                "src_key": "left_arm_takeover_pose",
-                                "dst_key": "left_arm_takeover_pre_pose",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name":"no_validation",
-                                        "kwargs": {},
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_offset_pose",
-                                                "kwargs": {
-                                                    "offset_value": -0.1,
-                                                    "direction": "z",
-                                                    "mode": "intrinsic"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            },
-            {
-                "left_arm_takeover_pre_qpos": {
-                    "name": "generate_affordances_from_src",
-                    "kwargs": {
-                        "affordance_infos": [
-                            {
-                                "src_key": "left_arm_takeover_pre_pose",
-                                "dst_key": "left_arm_takeover_pre_qpos",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name": "get_ik_ret",
-                                        "kwargs": {
-                                            "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_aim_qpos']",
-                                            "control_part": "left_arm"
-                                        },
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_ik_qpos",
-                                                "kwargs": {
-                                                    "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_aim_qpos']",
-                                                    "control_part": "left_arm"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "is_qpos_flip",
-                                        "kwargs": {
-                                            "qpos_ref": "env.affordance_datas['left_arm_init_qpos']",
-                                            "qpos_ids": [3, 4],
-                                            "threshold": 3.455751918948773,
-                                            "mode": "delta",
-                                            "return_inverse": true
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            },
-            {
-                "left_arm_takeover_qpos": {
-                    "name": "generate_affordances_from_src",
-                    "kwargs": {
-                        "affordance_infos": [
-                            {
-                                "src_key": "left_arm_takeover_pose",
-                                "dst_key": "left_arm_takeover_qpos",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name": "get_ik_ret",
-                                        "kwargs": {
-                                            "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_takeover_pre_qpos']",
-                                            "control_part": "left_arm"
-                                        },
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_ik_qpos",
-                                                "kwargs": {
-                                                    "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_takeover_pre_qpos']",
-                                                    "control_part": "left_arm"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "is_qpos_flip",
-                                        "kwargs": {
-                                            "qpos_ref": "env.affordance_datas['left_arm_init_qpos']",
-                                            "qpos_ids": [3, 4],
-                                            "threshold": 3.455751918948773,
-                                            "mode": "delta",
-                                            "return_inverse": true
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                }
-            },
-            {
-                "left_arm_cube_place_position": {
-                    "name": "generate_affordances_from_src",
-                    "kwargs": {
-                        "affordance_infos": [
-                            {
-                                "src_key": "rack_pose",
-                                "dst_key": "left_arm_cube_place_temp_pose",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name":"no_validation",
-                                        "kwargs": {},
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_offset_pose",
-                                                "kwargs": {
-                                                    "offset_value": 0.09,
+                                                    "offset_value": "env.affordance_datas['pipette_button_offset']",
                                                     "direction": "z",
                                                     "mode": "extrinsic"
                                                 }
-                                            },
-                                            {
-                                                "name": "get_offset_pose",
-                                                "kwargs": {
-                                                    "offset_value": 0.011,
-                                                    "direction": "x",
-                                                    "mode": "intrinsic"
-                                                }
                                             }
                                         ]
                                     }
@@ -713,31 +873,24 @@
                 }
             },
             {
-                "left_arm_cube_place_pose": {
+                "left_arm_pipette_beaker1_press_pose": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "left_arm_takeover_pose",
-                                "dst_key": "left_arm_cube_place_pose",
+                                "src_key": "left_arm_pipette_beaker1_pose",
+                                "dst_key": "left_arm_pipette_beaker1_press_pose",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "no_validation",
                                         "kwargs": {},
                                         "pass_processes": [
                                             {
-                                                "name": "get_replaced_pose",
-                                                "kwargs":{
-                                                    "pose_replace_value": "env.affordance_datas['left_arm_cube_place_temp_pose'][:3,3]",
-                                                    "axis_str_replace": "xyz"
-                                                }
-                                            },
-                                            {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": 0.008,
+                                                    "offset_value": "env.affordance_datas['pipette_left_arm_press_offset']",
                                                     "direction": "z",
-                                                    "mode": "intrinsic"
+                                                    "mode": "extrinsic"
                                                 }
                                             }
                                         ]
@@ -749,16 +902,102 @@
                 }
             },
             {
-                "left_arm_cube_place_pre_waypoint1_pose_qpos": {
+                "left_arm_pipette_beaker1_qpos": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "left_arm_cube_place_pose",
-                                "dst_key": "left_arm_cube_place_pre_waypoint1_pose",
+                                "src_key": "left_arm_pipette_beaker1_pose",
+                                "dst_key": "left_arm_pipette_beaker1_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
-                                        "name":"no_validation",
+                                        "name": "get_ik_ret",
+                                        "kwargs": {
+                                            "ik_func": "env.robot.compute_ik",
+                                            "qpos_seed": "env.affordance_datas['left_arm_aim_beaker1_qpos']",
+                                            "control_part": "left_arm"
+                                        },
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_ik_qpos",
+                                                "kwargs": {
+                                                    "ik_func": "env.robot.compute_ik",
+                                                    "qpos_seed": "env.affordance_datas['left_arm_aim_beaker1_qpos']",
+                                                    "control_part": "left_arm"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "is_qpos_flip",
+                                        "kwargs": {
+                                            "qpos_ref": "env.affordance_datas['left_arm_init_qpos']",
+                                            "qpos_ids": [3, 4],
+                                            "threshold": 3.455751918948773,
+                                            "mode": "delta",
+                                            "return_inverse": true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "left_arm_pipette_beaker1_press_qpos": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "left_arm_pipette_beaker1_press_pose",
+                                "dst_key": "left_arm_pipette_beaker1_press_qpos",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "get_ik_ret",
+                                        "kwargs": {
+                                            "ik_func": "env.robot.compute_ik",
+                                            "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker1_qpos']",
+                                            "control_part": "left_arm"
+                                        },
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_ik_qpos",
+                                                "kwargs": {
+                                                    "ik_func": "env.robot.compute_ik",
+                                                    "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker1_qpos']",
+                                                    "control_part": "left_arm"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "is_qpos_flip",
+                                        "kwargs": {
+                                            "qpos_ref": "env.affordance_datas['left_arm_init_qpos']",
+                                            "qpos_ids": [3, 4],
+                                            "threshold": 3.455751918948773,
+                                            "mode": "delta",
+                                            "return_inverse": true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "left_arm_pipette_beaker1_up_pose": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "left_arm_pipette_beaker1_pose",
+                                "dst_key": "left_arm_pipette_beaker1_up_pose",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "no_validation",
                                         "kwargs": {},
                                         "pass_processes": [
                                             {
@@ -772,16 +1011,25 @@
                                         ]
                                     }
                                 ]
-                            },
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "left_arm_pipette_beaker1_up_qpos": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
                             {
-                                "src_key": "left_arm_cube_place_pre_waypoint1_pose",
-                                "dst_key": "left_arm_cube_place_pre_waypoint1_qpos",
+                                "src_key": "left_arm_pipette_beaker1_up_pose",
+                                "dst_key": "left_arm_pipette_beaker1_up_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "get_ik_ret",
                                         "kwargs": {
                                             "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_aim_qpos']",
+                                            "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker1_qpos']",
                                             "control_part": "left_arm"
                                         },
                                         "pass_processes": [
@@ -789,7 +1037,7 @@
                                                 "name": "get_ik_qpos",
                                                 "kwargs": {
                                                     "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_aim_qpos']",
+                                                    "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker1_qpos']",
                                                     "control_part": "left_arm"
                                                 }
                                             }
@@ -812,85 +1060,37 @@
                 }
             },
             {
-                "left_arm_cube_place_pre_waypoint2_pose_qpos": {
-                    "name": "generate_affordances_from_src",
-                    "kwargs": {
-                        "affordance_infos": [
-                            {
-                                "src_key": "left_arm_cube_place_pose",
-                                "dst_key": "left_arm_cube_place_pre_waypoint2_pose",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name":"no_validation",
-                                        "kwargs": {},
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_offset_pose",
-                                                "kwargs": {
-                                                    "offset_value": 0.075,
-                                                    "direction": "z",
-                                                    "mode": "extrinsic"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "src_key": "left_arm_cube_place_pre_waypoint2_pose",
-                                "dst_key": "left_arm_cube_place_pre_waypoint2_qpos",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name": "get_ik_ret",
-                                        "kwargs": {
-                                            "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_cube_place_pre_waypoint1_qpos']",
-                                            "control_part": "left_arm"
-                                        },
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_ik_qpos",
-                                                "kwargs": {
-                                                    "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_cube_place_pre_waypoint1_qpos']",
-                                                    "control_part": "left_arm"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "is_qpos_flip",
-                                        "kwargs": {
-                                            "qpos_ref": "env.affordance_datas['left_arm_init_qpos']",
-                                            "qpos_ids": [3, 4],
-                                            "threshold": 3.455751918948773,
-                                            "mode": "delta",
-                                            "return_inverse": true
-                                        }
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                "left_arm_aim_beaker2_qpos": {
+                    "name": "generate_left_arm_aim_beaker2_qpos",
+                    "kwargs": {}
                 }
             },
             {
-                "left_arm_cube_place_pre_pose": {
+                "left_arm_pipette_beaker2_pose": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "left_arm_cube_place_pose",
-                                "dst_key": "left_arm_cube_place_pre_pose",
+                                "src_key": "right_arm_pipette_beaker2_pose",
+                                "dst_key": "left_arm_pipette_beaker2_pose",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
-                                        "name":"no_validation",
+                                        "name": "no_validation",
                                         "kwargs": {},
                                         "pass_processes": [
                                             {
+                                                "name": "get_rotated_pose",
+                                                "kwargs": {
+                                                    "rot_angle": -120,
+                                                    "rot_axis": "x",
+                                                    "mode": "intrinsic",
+                                                    "degrees": true
+                                                }
+                                            },
+                                            {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": 0.05,
+                                                    "offset_value": "env.affordance_datas['pipette_button_offset']",
                                                     "direction": "z",
                                                     "mode": "extrinsic"
                                                 }
@@ -904,19 +1104,77 @@
                 }
             },
             {
-                "left_arm_cube_place_pre_qpos": {
+                "left_arm_pipette_beaker2_wait_pose": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "left_arm_cube_place_pre_pose",
-                                "dst_key": "left_arm_cube_place_pre_qpos",
+                                "src_key": "left_arm_pipette_beaker2_pose",
+                                "dst_key": "left_arm_pipette_beaker2_wait_pose",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "no_validation",
+                                        "kwargs": {},
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": 0.1,
+                                                    "direction": "y",
+                                                    "mode": "extrinsic"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "left_arm_pipette_beaker2_press_pose": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "left_arm_pipette_beaker2_pose",
+                                "dst_key": "left_arm_pipette_beaker2_press_pose",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "no_validation",
+                                        "kwargs": {},
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": "env.affordance_datas['pipette_left_arm_press_offset']",
+                                                    "direction": "z",
+                                                    "mode": "extrinsic"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "left_arm_pipette_beaker2_qpos": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "left_arm_pipette_beaker2_pose",
+                                "dst_key": "left_arm_pipette_beaker2_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "get_ik_ret",
                                         "kwargs": {
                                             "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_cube_place_pre_waypoint2_qpos']",
+                                            "qpos_seed": "env.affordance_datas['left_arm_aim_beaker2_qpos']",
                                             "control_part": "left_arm"
                                         },
                                         "pass_processes": [
@@ -924,7 +1182,7 @@
                                                 "name": "get_ik_qpos",
                                                 "kwargs": {
                                                     "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_cube_place_pre_waypoint2_qpos']",
+                                                    "qpos_seed": "env.affordance_datas['left_arm_aim_beaker2_qpos']",
                                                     "control_part": "left_arm"
                                                 }
                                             }
@@ -947,19 +1205,19 @@
                 }
             },
             {
-                "left_arm_cube_place_qpos": {
+                "left_arm_pipette_beaker2_wait_qpos": {
                     "name": "generate_affordances_from_src",
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "left_arm_cube_place_pose",
-                                "dst_key": "left_arm_cube_place_qpos",
+                                "src_key": "left_arm_pipette_beaker2_wait_pose",
+                                "dst_key": "left_arm_pipette_beaker2_wait_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "get_ik_ret",
                                         "kwargs": {
                                             "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_cube_place_pre_qpos']",
+                                            "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker2_qpos']",
                                             "control_part": "left_arm"
                                         },
                                         "pass_processes": [
@@ -967,7 +1225,122 @@
                                                 "name": "get_ik_qpos",
                                                 "kwargs": {
                                                     "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_cube_place_pre_qpos']",
+                                                    "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker2_qpos']",
+                                                    "control_part": "left_arm"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "is_qpos_flip",
+                                        "kwargs": {
+                                            "qpos_ref": "env.affordance_datas['left_arm_init_qpos']",
+                                            "qpos_ids": [3, 4],
+                                            "threshold": 3.455751918948773,
+                                            "mode": "delta",
+                                            "return_inverse": true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "left_arm_pipette_beaker2_press_qpos": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "left_arm_pipette_beaker2_press_pose",
+                                "dst_key": "left_arm_pipette_beaker2_press_qpos",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "get_ik_ret",
+                                        "kwargs": {
+                                            "ik_func": "env.robot.compute_ik",
+                                            "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker2_qpos']",
+                                            "control_part": "left_arm"
+                                        },
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_ik_qpos",
+                                                "kwargs": {
+                                                    "ik_func": "env.robot.compute_ik",
+                                                    "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker2_qpos']",
+                                                    "control_part": "left_arm"
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "name": "is_qpos_flip",
+                                        "kwargs": {
+                                            "qpos_ref": "env.affordance_datas['left_arm_init_qpos']",
+                                            "qpos_ids": [3, 4],
+                                            "threshold": 3.455751918948773,
+                                            "mode": "delta",
+                                            "return_inverse": true
+                                        }
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "left_arm_pipette_beaker2_up_pose": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "left_arm_pipette_beaker2_pose",
+                                "dst_key": "left_arm_pipette_beaker2_up_pose",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "no_validation",
+                                        "kwargs": {},
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": 0.1,
+                                                    "direction": "z",
+                                                    "mode": "extrinsic"
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "left_arm_pipette_beaker2_up_qpos": {
+                    "name": "generate_affordances_from_src",
+                    "kwargs": {
+                        "affordance_infos": [
+                            {
+                                "src_key": "left_arm_pipette_beaker2_up_pose",
+                                "dst_key": "left_arm_pipette_beaker2_up_qpos",
+                                "valid_funcs_name_kwargs_proc": [
+                                    {
+                                        "name": "get_ik_ret",
+                                        "kwargs": {
+                                            "ik_func": "env.robot.compute_ik",
+                                            "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker2_qpos']",
+                                            "control_part": "left_arm"
+                                        },
+                                        "pass_processes": [
+                                            {
+                                                "name": "get_ik_qpos",
+                                                "kwargs": {
+                                                    "ik_func": "env.robot.compute_ik",
+                                                    "qpos_seed": "env.affordance_datas['left_arm_pipette_beaker2_qpos']",
                                                     "control_part": "left_arm"
                                                 }
                                             }
@@ -1039,73 +1412,193 @@
             {
                 "aim_to_pre1": {
                     "src": "right_arm_aim_qpos",
-                    "sink": "right_arm_cube_pre1_qpos",
+                    "sink": "right_arm_pipette_pre1_qpos",
                     "duration": 24,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "right_arm",
                         "keypose_names": [
                             "right_arm_aim_qpos",
-                            "right_arm_cube_pre1_qpos"
+                            "right_arm_pipette_pre1_qpos"
                         ]
                     }
                 }
             },
             {
                 "pre1_to_grasp": {
-                    "src": "right_arm_cube_pre1_qpos",
-                    "sink": "right_arm_cube_grasp_qpos",
+                    "src": "right_arm_pipette_pre1_qpos",
+                    "sink": "right_arm_pipette_grasp_qpos",
                     "duration": 35,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "right_arm",
                         "keypose_names": [
-                            "right_arm_cube_pre1_qpos",
-                            "right_arm_cube_grasp_qpos"
+                            "right_arm_pipette_pre1_qpos",
+                            "right_arm_pipette_grasp_qpos"
                         ]
                     }
                 }
             },
             {
                 "grasp_to_up1": {
-                    "src": "right_arm_cube_grasp_qpos",
-                    "sink": "right_arm_cube_up1_qpos",
+                    "src": "right_arm_pipette_grasp_qpos",
+                    "sink": "right_arm_pipette_up1_qpos",
                     "duration": 25,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "right_arm",
                         "keypose_names": [
-                            "right_arm_cube_grasp_qpos",
-                            "right_arm_cube_up1_qpos"
+                            "right_arm_pipette_grasp_qpos",
+                            "right_arm_pipette_up1_qpos"
                         ]
                     }
                 }
             },
             {
-                "up1_to_up2": {
-                    "src": "right_arm_cube_up1_qpos",
-                    "sink": "right_arm_cube_up2_qpos",
-                    "duration": 35,
+                "up1_to_beaker1_pre": {
+                    "src": "right_arm_pipette_up1_qpos",
+                    "sink": "right_arm_pipette_beaker1_pre_qpos",
+                    "duration": 25,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "right_arm",
                         "keypose_names": [
-                            "right_arm_cube_up1_qpos",
-                            "right_arm_cube_up2_qpos"
+                            "right_arm_pipette_up1_qpos",
+                            "right_arm_pipette_beaker1_pre_qpos"
                         ]
                     }
                 }
             },
             {
-                "up2_to_init": {
-                    "src": "right_arm_cube_up2_qpos",
+                "beaker1_pre_to_beaker1": {
+                    "src": "right_arm_pipette_beaker1_pre_qpos",
+                    "sink": "right_arm_pipette_beaker1_qpos",
+                    "duration": 25,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "right_arm",
+                        "keypose_names": [
+                            "right_arm_pipette_beaker1_pre_qpos",
+                            "right_arm_pipette_beaker1_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "beaker1_to_beaker1_pre": {
+                    "src": "right_arm_pipette_beaker1_qpos",
+                    "sink": "right_arm_pipette_beaker1_pre_qpos",
+                    "duration": 25,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "right_arm",
+                        "keypose_names": [
+                            "right_arm_pipette_beaker1_qpos",
+                            "right_arm_pipette_beaker1_pre_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "beaker1_pre_to_beaker2_pre": {
+                    "src": "right_arm_pipette_beaker1_pre_qpos",
+                    "sink": "right_arm_pipette_beaker2_pre_qpos",
+                    "duration": 25,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "right_arm",
+                        "keypose_names": [
+                            "right_arm_pipette_beaker1_pre_qpos",
+                            "right_arm_pipette_beaker2_pre_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "beaker2_pre_to_beaker2": {
+                    "src": "right_arm_pipette_beaker2_pre_qpos",
+                    "sink": "right_arm_pipette_beaker2_qpos",
+                    "duration": 25,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "right_arm",
+                        "keypose_names": [
+                            "right_arm_pipette_beaker2_pre_qpos",
+                            "right_arm_pipette_beaker2_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "beaker2_to_beaker2_pre": {
+                    "src": "right_arm_pipette_beaker2_qpos",
+                    "sink": "right_arm_pipette_beaker2_pre_qpos",
+                    "duration": 25,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "right_arm",
+                        "keypose_names": [
+                            "right_arm_pipette_beaker2_qpos",
+                            "right_arm_pipette_beaker2_pre_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "beaker2_pre_to_grasp_pre1": {
+                    "src": "right_arm_pipette_beaker2_pre_qpos",
+                    "sink": "right_arm_pipette_pre1_qpos",
+                    "duration": 45,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "right_arm",
+                        "keypose_names": [
+                            "right_arm_pipette_beaker2_pre_qpos",
+                            "right_arm_pipette_pre1_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "grasp_pre1_to_grasp": {
+                    "src": "right_arm_pipette_pre1_qpos",
+                    "sink": "right_arm_pipette_grasp_qpos",
+                    "duration": 25,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "right_arm",
+                        "keypose_names": [
+                            "right_arm_pipette_pre1_qpos",
+                            "right_arm_pipette_grasp_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "grasp_to_grasp_pre1": {
+                    "src": "right_arm_pipette_grasp_qpos",
+                    "sink": "right_arm_pipette_pre1_qpos",
+                    "duration": 10,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "right_arm",
+                        "keypose_names": [
+                            "right_arm_pipette_grasp_qpos",
+                            "right_arm_pipette_pre1_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "grasp_pre1_to_init": {
+                    "src": "right_arm_pipette_pre1_qpos",
                     "sink": "right_arm_init_qpos",
-                    "duration": 24,
+                    "duration": 25,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "right_arm",
                         "keypose_names": [
-                            "right_arm_cube_up2_qpos",
+                            "right_arm_pipette_pre1_qpos",
                             "right_arm_init_qpos"
                         ]
                     }
@@ -1114,136 +1607,135 @@
         ],
         "left_arm": [
             {
-                "left_init_to_aim": {
+                "left_init_to_aim_beaker1": {
                     "src": "left_arm_init_qpos",
-                    "sink": "left_arm_aim_qpos",
+                    "sink": "left_arm_aim_beaker1_qpos",
                     "duration": 15,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
                         "keypose_names": [
                             "left_arm_init_qpos",
-                            "left_arm_aim_qpos"
+                            "left_arm_aim_beaker1_qpos"
                         ]
                     }
                 }
             },
             {
-                "left_aim_to_takeover": {
-                    "src": "left_arm_aim_qpos",
-                    "sink": "left_arm_takeover_qpos",
-                    "duration": 40,
-                    "name": "plan_trajectory",
-                    "kwargs": {
-                        "agent_uid": "left_arm",
-                        "keypose_names": [
-                            "left_arm_aim_qpos",
-                            "left_arm_takeover_pre_qpos",
-                            "left_arm_takeover_qpos"
-                        ]
-                    }
-                }
-            },
-            {
-                "left_takeover_to_pre1": {
-                    "src": "left_arm_takeover_qpos",
-                    "sink": "left_arm_cube_place_pre_waypoint1_qpos",
-                    "duration": 35,
-                    "name": "plan_trajectory",
-                    "kwargs": {
-                        "agent_uid": "left_arm",
-                        "keypose_names": [
-                            "left_arm_takeover_qpos",
-                            "left_arm_cube_place_pre_waypoint1_qpos"
-                        ]
-                    }
-                }
-            },
-            {
-                "left_pre1_to_pre2": {
-                    "src": "left_arm_cube_place_pre_waypoint1_qpos",
-                    "sink": "left_arm_cube_place_pre_waypoint2_qpos",
+                "left_aim_beaker1_to_beaker1": {
+                    "src": "left_arm_aim_beaker1_qpos",
+                    "sink": "left_arm_pipette_beaker1_qpos",
                     "duration": 15,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
                         "keypose_names": [
-                            "left_arm_cube_place_pre_waypoint1_qpos",
-                            "left_arm_cube_place_pre_waypoint2_qpos"
+                            "left_arm_aim_beaker1_qpos",
+                            "left_arm_pipette_beaker1_qpos"
                         ]
                     }
                 }
             },
             {
-                "left_pre2_to_pre": {
-                    "src": "left_arm_cube_place_pre_waypoint2_qpos",
-                    "sink": "left_arm_cube_place_pre_qpos",
+                "left_beaker1_to_beaker1_press": {
+                    "src": "left_arm_pipette_beaker1_qpos",
+                    "sink": "left_arm_pipette_beaker1_press_qpos",
                     "duration": 15,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
                         "keypose_names": [
-                            "left_arm_cube_place_pre_waypoint2_qpos",
-                            "left_arm_cube_place_pre_qpos"
+                            "left_arm_pipette_beaker1_qpos",
+                            "left_arm_pipette_beaker1_press_qpos"
                         ]
                     }
                 }
             },
             {
-                "left_pre_to_place": {
-                    "src": "left_arm_cube_place_pre_qpos",
-                    "sink": "left_arm_cube_place_qpos",
+                "left_beaker1_press_to_beaker1_up": {
+                    "src": "left_arm_pipette_beaker1_press_qpos",
+                    "sink": "left_arm_pipette_beaker1_up_qpos",
                     "duration": 15,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
                         "keypose_names": [
-                            "left_arm_cube_place_pre_qpos",
-                            "left_arm_cube_place_qpos"
+                            "left_arm_pipette_beaker1_press_qpos",
+                            "left_arm_pipette_beaker1_up_qpos"
                         ]
                     }
                 }
             },
             {
-                "left_place_to_pre": {
-                    "src": "left_arm_cube_place_qpos",
-                    "sink": "left_arm_cube_place_pre_qpos",
+                "left_beaker1_up_to_beaker2_wait": {
+                    "src": "left_arm_pipette_beaker1_press_qpos",
+                    "sink": "left_arm_pipette_beaker2_wait_qpos",
+                    "duration": 25,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "left_arm",
+                        "keypose_names": [
+                            "left_arm_pipette_beaker1_press_qpos",
+                            "left_arm_pipette_beaker2_wait_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "left_beaker2_wait_to_beaker2": {
+                    "src": "left_arm_pipette_beaker2_wait_qpos",
+                    "sink": "left_arm_pipette_beaker2_qpos",
                     "duration": 15,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
                         "keypose_names": [
-                            "left_arm_cube_place_qpos",
-                            "left_arm_cube_place_pre_qpos"
+                            "left_arm_pipette_beaker2_wait_qpos",
+                            "left_arm_pipette_beaker2_qpos"
                         ]
                     }
                 }
             },
             {
-                "left_pre_to_pre1": {
-                    "src": "left_arm_cube_place_pre_qpos",
-                    "sink": "left_arm_cube_place_pre_waypoint1_qpos",
+                "left_beaker2_to_beaker2_press": {
+                    "src": "left_arm_pipette_beaker2_qpos",
+                    "sink": "left_arm_pipette_beaker2_press_qpos",
                     "duration": 15,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
                         "keypose_names": [
-                            "left_arm_cube_place_pre_qpos",
-                            "left_arm_cube_place_pre_waypoint1_qpos"
+                            "left_arm_pipette_beaker2_qpos",
+                            "left_arm_pipette_beaker2_press_qpos"
                         ]
                     }
                 }
             },
             {
-                "left_pre1_to_init": {
-                    "src": "left_arm_cube_place_pre_waypoint1_qpos",
+                "left_beaker2_press_to_beaker2_up": {
+                    "src": "left_arm_pipette_beaker2_press_qpos",
+                    "sink": "left_arm_pipette_beaker2_up_qpos",
+                    "duration": 15,
+                    "name": "plan_trajectory",
+                    "kwargs": {
+                        "agent_uid": "left_arm",
+                        "keypose_names": [
+                            "left_arm_pipette_beaker2_press_qpos",
+                            "left_arm_pipette_beaker2_up_qpos"
+                        ]
+                    }
+                }
+            },
+            {
+                "left_beaker2_up_to_init": {
+                    "src": "left_arm_pipette_beaker2_up_qpos",
                     "sink": "left_arm_init_qpos",
-                    "duration": 30,
+                    "duration": 15,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
                         "keypose_names": [
-                            "left_arm_cube_place_pre_waypoint1_qpos",
+                            "left_arm_pipette_beaker2_up_qpos",
                             "left_arm_init_qpos"
                         ]
                     }
@@ -1255,7 +1747,7 @@
                 "close0": {
                     "src": "open",
                     "sink": "close",
-                    "duration": 20,
+                    "duration": 30,
                     "name": "execute_close",
                     "kwargs": {
                         "return_action": true,
@@ -1281,7 +1773,7 @@
                 "rclose0": {
                     "src": "ropen",
                     "sink": "rclose",
-                    "duration": 20,
+                    "duration": 30,
                     "name": "execute_close",
                     "kwargs": {
                         "return_action": true,
@@ -1314,42 +1806,44 @@
                 "rclose0"
             ]
         },
-        "ropen0": {
+        "left_aim_beaker1_to_beaker1": {
             "depend_tasks": [
+                "beaker1_pre_to_beaker1",
                 "close0"
             ]
         },
-        "up2_to_init": {
+        "beaker1_to_beaker1_pre": {
+            "depend_tasks": [
+                "left_beaker1_press_to_beaker1_up",
+                "left_beaker1_up_to_beaker2_wait"
+            ]
+        },
+        "left_beaker2_wait_to_beaker2": {
+            "depend_tasks": [
+                "beaker2_pre_to_beaker2"
+            ]
+        },
+        "beaker2_to_beaker2_pre": {
+            "depend_tasks": [
+                "left_beaker2_up_to_init"
+            ]
+        },
+        "ropen0": {
+            "depend_tasks": [
+                "grasp_pre1_to_grasp"
+            ]
+        },
+        "grasp_to_grasp_pre1": {
             "depend_tasks": [
                 "ropen0"
             ]
         },
-        "left_aim_to_takeover": {
+       "open0": {
             "depend_tasks": [
-                "up1_to_up2"
-            ]
-        },
-        "close0": {
-            "depend_tasks": [
-                "left_aim_to_takeover"
-            ]
-        },
-        "left_takeover_to_pre1": {
-            "depend_tasks": [
-                "close0",
-                "ropen0"
-            ]
-        },
-        "open0": {
-            "depend_tasks": [
-                "left_pre_to_place"
-            ]
-        },
-        "left_place_to_pre": {
-            "depend_tasks": [
-                "open0"
+                "left_beaker2_press_to_beaker2_up"
             ]
         }
+
     },
     "misc": {
         "vis_graph": false,

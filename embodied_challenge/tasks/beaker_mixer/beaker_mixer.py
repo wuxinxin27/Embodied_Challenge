@@ -20,7 +20,7 @@ from typing import Dict, Optional
 from embodichain.lab.gym.envs import EmbodiedEnv, EmbodiedEnvCfg
 from embodichain.lab.gym.utils.registration import register_env
 from embodichain.lab.gym.envs.managers.cfg import SceneEntityCfg
-from embodichain.lab.gym.envs.managers.events import visualize_rigid_body_pose
+from embodied_challenge.managers.events import visualize_rigid_body_pose
 from embodichain.utils import logger
 
 from embodichain.lab.gym.envs.tasks.tableware.base_agent_env import BaseAgentEnv
@@ -41,87 +41,6 @@ class BeakerMixerEnv(EmbodiedEnv):
 
         if action_config is not None:
             self.action_config = action_config
-
-        # Optional debug rendering for rigid-body coordinate frames.
-        self.render_rigid_axes = bool(
-            kwargs.get(
-                "render_rigid_axes",
-                debug_render_cfg.get(
-                    "render_rigid_axes",
-                    action_config.pop("render_rigid_axes", False)
-                    if isinstance(action_config, dict)
-                    else False,
-                ),
-            )
-        )
-        self.rigid_axes_entities = kwargs.get(
-            "rigid_axes_entities",
-            debug_render_cfg.get(
-                "rigid_axes_entities",
-                action_config.pop("rigid_axes_entities", ["beaker", "beaker_mixer"])
-                if isinstance(action_config, dict)
-                else ["beaker", "beaker_mixer"],
-            ),
-        )
-        self.rigid_axes_size = float(
-            kwargs.get(
-                "rigid_axes_size",
-                debug_render_cfg.get(
-                    "rigid_axes_size",
-                    action_config.pop("rigid_axes_size", 0.003)
-                    if isinstance(action_config, dict)
-                    else 0.003,
-                ),
-            )
-        )
-        self.rigid_axes_len = float(
-            kwargs.get(
-                "rigid_axes_len",
-                debug_render_cfg.get(
-                    "rigid_axes_len",
-                    action_config.pop("rigid_axes_len", 0.06)
-                    if isinstance(action_config, dict)
-                    else 0.06,
-                ),
-            )
-        )
-        self.rigid_axes_arena_index = int(
-            kwargs.get(
-                "rigid_axes_arena_index",
-                debug_render_cfg.get(
-                    "rigid_axes_arena_index",
-                    action_config.pop("rigid_axes_arena_index", 0)
-                    if isinstance(action_config, dict)
-                    else 0,
-                ),
-            )
-        )
-
-    def _render_rigid_axes(self):
-        if not self.render_rigid_axes:
-            return
-
-        for uid in self.rigid_axes_entities:
-            visualize_rigid_body_pose(
-                env=self,
-                env_ids=None,
-                entity_cfg=SceneEntityCfg(uid=uid),
-                marker_name=f"debug_{uid}_axis",
-                axis_size=self.rigid_axes_size,
-                axis_len=self.rigid_axes_len,
-                arena_index=self.rigid_axes_arena_index,
-                remove_old=True,
-            )
-
-    def reset(self, seed: Optional[int] = None, options: Optional[Dict] = None):
-        obs, info = super().reset(seed=seed, options=options)
-        self._render_rigid_axes()
-        return obs, info
-
-    def step(self, action):
-        obs, reward, terminated, truncated, info = super().step(action)
-        self._render_rigid_axes()
-        return obs, reward, terminated, truncated, info
 
     def create_demo_action_list(self, *args, **kwargs):
         """Create a demonstration action list for BeakerMixer task."""
@@ -192,9 +111,52 @@ class BeakerMixerEnv(EmbodiedEnv):
                         actions[:, 0, active_idx] = local_action_data[:, i]
         return actions
 
-    def is_task_success(self, **kwargs) -> torch.Tensor:
-        return super().is_task_success(**kwargs)
+    def compute_task_state(self, **kwargs):
+        beaker = self.sim.get_rigid_object("beaker")
+        mixer = self.sim.get_rigid_object("beaker_mixer")
 
+        beaker_pose = beaker.get_local_pose(to_matrix=True)
+        mixer_pose = mixer.get_local_pose(to_matrix=True)
+
+        beaker_fall = self._is_fall(beaker_pose)
+        success = torch.zeros_like(beaker_fall, dtype=torch.bool)
+
+        return success, beaker_fall, {}
+
+    def is_task_success(self, **kwargs) -> torch.Tensor:
+
+        beaker = self.sim.get_rigid_object("beaker")
+        beaker_mixer = self.sim.get_rigid_object("beaker_mixer")
+
+        beaker_final_xpos = beaker.get_local_pose(to_matrix=True)
+        beaker_mixer_final_xpos = beaker_mixer.get_local_pose(to_matrix=True)
+
+        beaker_ret = self._is_fall(beaker_final_xpos)
+        beaker_pos_xy = beaker_final_xpos[:, :2, 3]
+        beaker_mixer_pos_xy = beaker_mixer_final_xpos[:, :2, 3]
+
+        # Success requires the beaker to stay near the mixer in XY plane.
+        beaker_mixer_dist = torch.linalg.norm(beaker_pos_xy - beaker_mixer_pos_xy, dim=-1)
+        # print(f"Beaker-Mixer distance: {beaker_mixer_dist.item():.4f}")
+        dist_threshold = 0.08
+        beaker_near_mixer = beaker_mixer_dist <= dist_threshold
+
+        return (~beaker_ret) & beaker_near_mixer
+
+    def _is_fall(self, pose: torch.Tensor) -> torch.Tensor:
+        # Extract z-axis from rotation matrix (last column, first 3 elements)
+        pose_rz = pose[:, :3, 2]
+        world_z_axis = torch.tensor([0, 0, 1], dtype=pose.dtype, device=pose.device)
+
+        # Compute dot product for each batch element
+        dot_product = torch.sum(pose_rz * world_z_axis, dim=-1)  # Shape: (batch_size,)
+
+        # Clamp to avoid numerical issues with arccos
+        dot_product = torch.clamp(dot_product, -1.0, 1.0)
+
+        # Compute angle and check if fallen
+        angle = torch.arccos(dot_product)
+        return angle >= torch.pi / 4
 
 @register_env("BeakerMixerAgent-v0", max_episode_steps=600)
 class BeakerMixerAgentEnv(BaseAgentEnv, BeakerMixerEnv):

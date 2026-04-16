@@ -4,6 +4,15 @@
     "max_episode_steps": 300,
     "env": {
         "events": {
+            "init_table_pose": {
+                "func": "randomize_rigid_object_pose",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "table"},
+                    "position_range": [[0.0, 0.0, -0.04], [0.0, 0.0, 0.04]],
+                    "relative_position": true
+                }
+            },
             "random_light": {
                 "func": "randomize_light",
                 "mode": "interval",
@@ -11,10 +20,109 @@
                 "params": {
                     "entity_cfg": {"uid": "light_1"},
                     "position_range": [[-0.5, -0.5, 2], [0.5, 0.5, 2]],
-                    "color_range": [[0.6, 0.6, 0.6], [1, 1, 1]],
+                    "color_range": [[0.6, 0.6, 0.6], [1.0, 1.0, 1.0]],
                     "intensity_range": [50.0, 100.0]
                 }
             },
+            "random_robot_material": {
+                "func": "randomize_visual_material",
+                "mode": "interval",
+                "interval_step": 5,
+                "params": {
+                    "entity_cfg": {"uid": "CobotMagic", "link_names": [".*"]},
+                    "random_texture_prob": 0.5,
+                    "texture_path": "CocoBackground/coco",
+                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
+                }
+            },
+            "random_table_material": {
+                "func": "randomize_visual_material",
+                "mode": "interval",
+                "interval_step": 2,
+                "params": {
+                    "entity_cfg": {"uid": "table"},
+                    "random_texture_prob": 0.5,
+                    "texture_path": "CocoBackground/coco",
+                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
+                }
+            },
+            "random_plane_material": {
+                "func": "randomize_visual_material",
+                "mode": "interval",
+                "interval_step": 2,
+                "params": {
+                    "entity_cfg": {"uid": "default_plane"},
+                    "random_texture_prob": 0.5,
+                    "texture_path": "CocoBackground/coco",
+                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
+                }
+            },
+            "random_camera_high_intrinsics": {
+                "func": "randomize_camera_intrinsics",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "cam_high"},
+                    "focal_x_range": [-50, 50],
+                    "focal_y_range": [-50, 50]
+                }
+            },
+            "random_camera_left_wrist_intrinsics": {
+                "func": "randomize_camera_intrinsics",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "cam_left_wrist"},
+                    "focal_x_range": [-20, 20],
+                    "focal_y_range": [-20, 20]
+                }
+            },
+            "random_camera_right_wrist_intrinsics": {
+                "func": "randomize_camera_intrinsics",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "cam_right_wrist"},
+                    "focal_x_range": [-20, 20],
+                    "focal_y_range": [-20, 20]
+                }
+            },
+             "random_camera_high_extrinsics": {
+                "func": "randomize_camera_extrinsics",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "cam_high"},
+                    "eye_range": [[-0.01, -0.01,-0.01], [0.01, 0.01, 0.01]],
+                    "target_range": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+                    "up_range": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+                }
+            },
+            "random_camera_left_wrist_extrinsics": {
+                "func": "randomize_camera_extrinsics",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "cam_left_wrist"},
+                    "pos_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
+                    "euler_range": [[0, 0, 0], [0, 0, 0]]
+                }
+            },
+            "random_camera_right_wrist_extrinsics": {
+                "func": "randomize_camera_extrinsics",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "cam_right_wrist"},
+                    "pos_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
+                    "euler_range": [[0, 0, 0], [0, 0, 0]]
+                }
+            },
+            "random_robot_init_qpos": {
+                "func": "randomize_robot_qpos",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "CobotMagic", "control_parts": ["left_arm", "right_arm"]},
+                    "qpos_range": [[-0.02, -0.02, -0.1, -0.02, -0.02, -0.1], [0.02, 0.02, 0.1, 0.02, 0.02, 0.1]],
+                    "relative_qpos": true,
+                    "joint_ids": [0, 5, 6, 7, 12, 13]
+                }
+            },
+
             "random_pen_pose": {
                 "func": "randomize_rigid_object_pose",
                 "mode": "reset",
@@ -33,17 +141,6 @@
                     "entity_cfg": {"uid": "holder"},
                     "position_range": [[0.0, -0.05, 0.0], [0.1, 0.05, 0.0]],
                     "relative_position": true
-                }
-            },
-            "random_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 2,
-                "params": {
-                    "entity_cfg": {"uid": "table"},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
                 }
             },
             "random_pen_material": {
@@ -68,43 +165,30 @@
                     "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
                 }
             },
-            "random_robot_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 5,
-                "params": {
-                    "entity_cfg": {"uid": "CobotMagic", "link_names": [".*"]},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_camera_intrinsics": {
-                "func": "randomize_camera_intrinsics",
+            "randomize_distractor_slots": {
+                "func": "replace_distractor_slots_from_library",
                 "mode": "reset",
                 "params": {
-                    "entity_cfg": {"uid": "cam_high"},
-                    "focal_x_range": [-50, 50],
-                    "focal_y_range": [-50, 50]
-                }
-            },
-            "random_robot_init_eef_pose": {
-                "func": "randomize_robot_eef_pose",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "CobotMagic", "control_parts": ["left_arm", "right_arm"]},
-                    "position_range":  [[-0.01, -0.01, -0.01], [0.01, 0.01, 0]]
-                }
-            },
-            "record_camera": {
-                "func": "record_camera_data",
-                "mode": "interval",
-                "interval_step": 1,
-                "params": {
-                    "name": "cam1",
-                    "resolution": [320, 240],
-                    "eye": [2, 0, 2],
-                    "target": [0.5, 0, 1]
+                    "entity_cfgs": [
+                        {"uid": "distractor_0"},
+                        {"uid": "distractor_1"}
+                    ],
+                    "library_index_path": "/root/workspace/Embodied_Challenge/assets/Distractor/ASSET_INDEX.json",
+                    "categories": ["PaperCup", "plastic_bin", "bottles", "fork", "mouse_pad", "plate", "spoon"],
+                    "position_ranges": [
+                        [[0.62, -0.20, 0.89], [0.86, -0.03, 0.92]],
+                        [[0.62, 0.03, 0.89], [0.86, 0.20, 0.92]]
+                    ],
+                    "appear_probs": [1.0, 1.0],
+                    "z_rotation_ranges": [
+                        [-180.0, 180.0],
+                        [-180.0, 180.0]
+                    ],
+                    "hide_position": [0.0, 0.0, -20.0],
+                    "avoid_uids": ["pen", "holder"],
+                    "min_distance_to_avoid": 0.2,
+                    "max_resample_attempts": 30,
+                    "physics_update_step": 1
                 }
             },
             "prepare_extra_attr": {
@@ -262,37 +346,29 @@
                 "params": {
                     "entity_cfg": {"uid": "pen"}
                 }
-            },
-            "exteroception": {
-                "func": "compute_exteroception",
-                "mode": "add",
-                "name": "exteroception",
-                "params": {
-                    "descriptor": {
-                        "cam_high": [
-                            {
-                                "type": "robot",
-                                "control_part": "left_arm"
-                            },
-                            {
-                                "type": "robot",
-                                "control_part": "right_arm"
-                            }
-                        ]
-                    },
-                    "x_interval": 0.02,
-                    "y_interval": 0.05,
-                    "kpnts_number": 2,
-                    "groups": 2
-                }
             }
         },
         "dataset": {
-            "robot_meta": {
-                "arm_dofs": 12,
-                "control_freq": 25,
-                "control_parts": ["left_arm", "left_eef", "right_arm", "right_eef"],
-                "min_len_steps": 5
+            "lerobot": {
+                "func": "LeRobotRecorder",
+                "mode": "save",
+                "params": {
+                    "save_path": "/root/workspace/Embodied_Challenge/lerobot_dataset/",
+                    "robot_meta": {
+                        "robot_type": "CobotMagic",
+                        "control_freq": 25,
+                        "control_parts": ["left_arm", "left_eef", "right_arm", "right_eef"]
+                    },
+                    "instruction": {
+                        "lang": "Right arm picks up the pen and hands it to left arm, then places it inside the pen holder"
+                    },
+                    "extra": {
+                        "scene_type": "Sim",
+                        "task_description": "items_handover_place",
+                        "data_type": "sim"
+                    },
+                    "use_videos": true
+                }
             }
         },
         "control_parts": ["left_arm", "left_eef", "right_arm", "right_eef"]
@@ -305,19 +381,16 @@
     },
     "sensor": [
         {
-            "sensor_type": "StereoCamera",
+            "sensor_type": "Camera",
             "uid": "cam_high",
-            "width": 96,
-            "height": 54,
-            "enable_mask": true,
-            "enable_depth": true,
-            "left_to_right_pos": [0.059684025824163614, 0, 0],
-            "intrinsics": [453.851402686215, 453.8347628855552, 469.827725021235, 258.6656181845155],
-            "intrinsics_right": [453.4536601653505, 453.3306024582175, 499.13697412367776, 297.7176248477935],
+            "width": 640,
+            "height": 480,
+            "enable_mask": false,
+            "intrinsics": [606.315186, 606.100952, 320.549316, 245.877106],
             "extrinsics": {
-                "eye": [0.35368482807598, 0.014695524383058989, 1.4517046071614774],
-                "target": [0.7186357573287919, -0.054534732904795505, 0.5232553674540066],
-                "up": [0.9306678549330372, -0.0005600064212467153, 0.3658647703553347]
+                "eye": [0.206931, 0.052728, 1.401134],
+                "target": [0.576285, -0.000645, 0.473375],
+                "up": [0.917003, -0.140871, 0.373178]
             }
         },
         {
@@ -325,12 +398,12 @@
             "uid": "cam_right_wrist",
             "width": 640,
             "height": 480,
-            "enable_mask": true,
-            "intrinsics": [488.1665344238281, 488.1665344238281, 322.7323303222656, 213.17434692382812],
+            "enable_mask": false,
+            "intrinsics": [603.117004394531, 602.418640136719, 326.727478027344, 251.933990478516],
             "extrinsics": {
                 "parent": "right_link6",
-                "pos": [-0.08, 0.0, 0.04],
-                "quat": [0.15304635, 0.69034543, -0.69034543, -0.15304635]
+                "pos": [-0.12, 0.0, 0.04],
+                "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
             }
         },
         {
@@ -338,12 +411,12 @@
             "uid": "cam_left_wrist",
             "width": 640,
             "height": 480,
-            "enable_mask": true,
-            "intrinsics": [488.1665344238281, 488.1665344238281, 322.7323303222656, 213.17434692382812],
+            "enable_mask": false,
+            "intrinsics": [603.117004394531, 602.418640136719, 326.727478027344, 251.933990478516],
             "extrinsics": {
                 "parent": "left_link6",
-                "pos": [-0.08, 0.0, 0.04],
-                "quat": [0.15304635, 0.69034543, -0.69034543, -0.15304635]
+                "pos": [-0.12, 0.0, 0.04],
+                "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
             }
         }
     ],
@@ -364,21 +437,21 @@
             "uid": "table",
             "shape": {
                 "shape_type": "Mesh",
-                "fpath": "MultiW1Data/table_a.obj",
+                "fpath": "CircleTableSimple/circle_table_simple.ply",
                 "compute_uv": true
             },
-            "attrs": {
+            "attrs" : {
                 "mass": 10.0,
-                "static_friction": 0.95,
-                "dynamic_friction": 0.9,
+                "static_friction": 2.0,
+                "dynamic_friction": 1.5,
                 "restitution": 0.01,
                 "contact_offset": 0.0002,
                 "rest_offset": 0.00005
             },
             "body_scale": [1, 1, 1],
             "body_type": "kinematic",
-            "init_pos": [0.6, 0.0, 0.05],
-            "init_rot": [0, 0, 0]
+            "init_pos": [0.725, 0.0, 0.7],
+            "init_rot": [0, 90, 0]
         }
     ],
     "rigid_object": [
