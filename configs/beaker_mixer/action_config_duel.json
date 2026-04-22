@@ -124,7 +124,7 @@
                                             {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": 0.04,
+                                                    "offset_value": 0.042,
                                                     "direction": "z",
                                                     "mode": "extrinsic"
                                                 }
@@ -653,6 +653,14 @@
                                                 }
                                             },
                                             {
+                                                "name": "get_offset_pose",
+                                                "kwargs": {
+                                                    "offset_value": -0.01,
+                                                    "direction": "z",
+                                                    "mode": "extrinsic"
+                                                }
+                                            },
+                                            {
                                                 "name": "get_rotated_pose",
                                                 "kwargs": {
                                                     "rot_angle": "env.affordance_datas['beaker_mixer_button_rotation_x']",
@@ -882,7 +890,7 @@
                 "left_aim_beaker_to_grasp_pre": {
                     "src": "left_arm_aim_beaker_qpos",
                     "sink": "left_arm_beaker_grasp_pre_qpos",
-                    "duration": 45,
+                    "duration": 55,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
@@ -897,7 +905,7 @@
                 "left_beaker_grasp_pre_to_grasp": {
                     "src": "left_arm_beaker_grasp_pre_qpos",
                     "sink": "left_arm_beaker_grasp_qpos",
-                    "duration": 35,
+                    "duration": 45,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",

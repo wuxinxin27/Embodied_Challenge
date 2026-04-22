@@ -1,6 +1,6 @@
 {
     "id": "BeakerMixer-v0",
-    "max_episodes": 500,
+    "max_episodes": 1000,
     "max_episode_steps": 500,
     "env": {
         "events": {
@@ -27,7 +27,7 @@
             "random_robot_material": {
                 "func": "randomize_visual_material",
                 "mode": "interval",
-                "interval_step": 5,
+                "interval_step": 10,
                 "params": {
                     "entity_cfg": {"uid": "CobotMagic", "link_names": [".*"]},
                     "random_texture_prob": 0.5,
@@ -38,7 +38,7 @@
             "random_table_material": {
                 "func": "randomize_visual_material",
                 "mode": "interval",
-                "interval_step": 2,
+                "interval_step": 10,
                 "params": {
                     "entity_cfg": {"uid": "table"},
                     "random_texture_prob": 0.5,
@@ -49,7 +49,7 @@
             "random_plane_material": {
                 "func": "randomize_visual_material",
                 "mode": "interval",
-                "interval_step": 2,
+                "interval_step": 10,
                 "params": {
                     "entity_cfg": {"uid": "default_plane"},
                     "random_texture_prob": 0.5,
@@ -163,7 +163,7 @@
             "random_beaker_mixer_material": {
                 "func": "randomize_visual_material",
                 "mode": "interval",
-                "interval_step": 8,
+                "interval_step": 10,
                 "params": {
                     "entity_cfg": {"uid": "beaker_mixer"},
                     "random_texture_prob": 0.5,
@@ -171,7 +171,32 @@
                     "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
                 }
             },
-
+            "randomize_distractor_slots": {
+                "func": "replace_distractor_slots_from_library",
+                "mode": "reset",
+                "params": {
+                    "entity_cfgs": [
+                        {"uid": "distractor_0"},
+                        {"uid": "distractor_1"}
+                    ],
+                    "library_index_path": "/root/workspace/Embodied_Challenge/embodied_challenge/Distractor/ASSET_INDEX.json",
+                    "categories": ["PaperCup", "plastic_bin", "fork", "mouse_pad", "spoon"],
+                    "position_ranges": [
+                        [[0.62, -0.20, 0.89], [0.86, -0.03, 0.92]],
+                        [[0.62, 0.03, 0.89], [0.86, 0.20, 0.92]]
+                    ],
+                    "appear_probs": [1.0, 1.0],
+                    "z_rotation_ranges": [
+                        [-180.0, 180.0],
+                        [-180.0, 180.0]
+                    ],
+                    "hide_position": [0.0, 0.0, -20.0],
+                    "avoid_uids": ["beaker", "beaker_mixer"],
+                    "min_distance_to_avoid": 0.3,
+                    "max_resample_attempts": 30,
+                    "physics_update_step": 1
+                }
+            },
             "prepare_extra_attr": {
                 "func": "prepare_extra_attr",
                 "mode": "reset",
@@ -207,7 +232,7 @@
                             "name": "grasp_offset_intrinsic_rotation_y",
                             "mode": "static",
                             "entity_cfg": {"uid": "beaker"},
-                            "value": -15
+                            "value": -20
                         },
                         {
                             "name": "place_offset_extrinsic_z",
@@ -237,7 +262,7 @@
                             "name": "button_offset_z",
                             "mode": "static",
                             "entity_cfg": {"uid": "beaker_mixer"},
-                            "value": 0.05
+                            "value": 0.045
                         },
                         {
                             "name": "button_rotation_x",
@@ -339,22 +364,6 @@
                     "part_name": "left_arm",
                     "position_only": false
                 }
-            },
-            "beaker_pose": {
-                "func": "get_rigid_object_pose",
-                "mode": "add",
-                "name": "beaker_pose",
-                "params": {
-                    "entity_cfg": {"uid": "beaker"}
-                }
-            },
-            "beaker_mixer_pose": {
-                "func": "get_rigid_object_pose",
-                "mode": "add",
-                "name": "beaker_mixer_pose",
-                "params": {
-                    "entity_cfg": {"uid": "beaker_mixer"}
-                }
             }
         },
         "dataset": {
@@ -385,7 +394,7 @@
     "robot": {
         "uid": "CobotMagic",
         "robot_type": "CobotMagic",
-        "init_pos": [0.0, 0.0, 0.76],
+        "init_pos": [0.0, 0.0, 0.835],
         "init_qpos": [-0.3, 0.3, 1.0, 1.0, -1.2, -1.2, 0.0, 0.0, 0.6, 0.6, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05],
         "attrs": {
             "contact_offset": 0.0002,
@@ -431,6 +440,19 @@
                 "pos": [-0.12, 0.0, 0.04],
                 "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
             }
+        },
+        {
+            "sensor_type": "ContactSensor",
+            "uid": "beaker_mixer_button_contact",
+            "rigid_uid_list": ["beaker_mixer"],
+            "articulation_cfg_list": [
+                {
+                    "articulation_uid": "CobotMagic",
+                    "link_name_list": ["right_link7", "right_link8"]
+                }
+            ],
+            "filter_need_both_actor": true,
+            "max_contacts_per_env": 128
         }
     ],
     "light": {
@@ -463,34 +485,10 @@
             },
             "body_scale": [1, 1, 1],
             "body_type": "kinematic",
-            "init_pos": [0.725, 0.0, 0.7],
+            "init_pos": [0.725, 0.0, 0.775],
             "init_rot": [0, 90, 0]
-        },
-        {
-            "uid": "beaker_mixer",
-            "shape": {
-                "shape_type": "Mesh",
-                "fpath": "/root/workspace/Embodied_Challenge/assets/beaker_mixer/beaker_mixer.obj",
-                "compute_uv": false
-            },
-            "attrs": {
-                "mass": 1.0,
-                "static_friction": 1.2,
-                "dynamic_friction": 1.0,
-                "contact_offset": 0.001,
-                "rest_offset": 0.00025,
-                "restitution": 0.0,
-                "max_depenetration_velocity": 1.0,
-                "min_position_iters": 32,
-                "min_velocity_iters": 8,
-                "enable_ccd": true
-            },
-            "body_scale": [0.3, 0.3, 0.3],
-            "body_type": "kinematic",
-            "max_convex_hull_num": 12,
-            "init_pos": [0.6, 0.0, 0.795],
-            "init_rot": [90, -90, 0]
         }
+
     ],
     "rigid_object": [
         {
@@ -514,9 +512,46 @@
             },
             "body_scale": [1.1, 1.1, 1.1],
             "max_convex_hull_num": 24,
-            "init_pos": [0.6, 0.3, 0.755],
+            "init_pos": [0.6, 0.3, 0.83],
             "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "beaker_mixer",
+            "shape": {
+                "shape_type": "Mesh",
+                "fpath": "/root/workspace/Embodied_Challenge/assets/beaker_mixer/beaker_mixer.obj",
+                "compute_uv": false
+            },
+            "attrs": {
+                "mass": 5.0,
+                "static_friction": 1.2,
+                "dynamic_friction": 1.0,
+                "contact_offset": 0.001,
+                "rest_offset": 0.00025,
+                "restitution": 0.0,
+                "max_depenetration_velocity": 1.0,
+                "min_position_iters": 32,
+                "min_velocity_iters": 8,
+                "enable_ccd": true
+            },
+            "body_scale": [0.3, 0.3, 0.3],
+            "max_convex_hull_num": 12,
+            "init_pos": [0.6, 0.0, 0.87],
+            "init_rot": [90, -90, 0]
+        },
+        {
+            "uid": "distractor_0",
+            "shape": {
+                "shape_type": "Mesh",
+                "fpath": "/root/workspace/Embodied_Challenge/assets/Beaker/beaker.ply"
+            }
+        },
+        {
+            "uid": "distractor_1",
+            "shape": {
+                "shape_type": "Mesh",
+                "fpath": "/root/workspace/Embodied_Challenge/assets/Beaker/beaker.ply"
+            }
         }
-
     ]
 }
