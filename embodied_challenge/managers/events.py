@@ -371,11 +371,23 @@ class replace_distractor_slots_from_library(Functor):
                 "No distractor assets found. Please check library_index_path/folder_path and filters."
             )
         self._hide_position = tuple(cfg.params.get("hide_position", [0.0, 0.0, -20.0]))
+        self._hide_spacing = float(cfg.params.get("hide_spacing", 0.5))
+        self._disable_hidden_collisions = bool(
+            cfg.params.get("disable_hidden_collisions", True)
+        )
+        self._toggle_visibility_on_reset = bool(
+            cfg.params.get("toggle_visibility_on_reset", False)
+        )
         self._pool_uids: list[str] = []
         self._slot_uids = self._resolve_slot_uids(cfg.params.get("entity_cfgs", []))
 
         self._preload_asset_pool(env, cfg.params)
-        self._hide_scene_objects(env, self._slot_uids)
+        self._hide_scene_objects(
+            env,
+            self._pool_uids,
+            update_visibility=self._toggle_visibility_on_reset,
+        )
+        self._hide_scene_objects(env, self._slot_uids, update_visibility=True)
 
     def _resolve_slot_uids(self, entity_cfgs: List[SceneEntityCfg] | List[Dict]) -> list[str]:
         uids = []
@@ -398,28 +410,71 @@ class replace_distractor_slots_from_library(Functor):
         except Exception:
             return os.path.abspath(path)
 
-    def _get_hidden_pose(self, env: EmbodiedEnv, env_ids: torch.Tensor) -> torch.Tensor:
+    def _get_hidden_pose(
+        self,
+        env: EmbodiedEnv,
+        env_ids: torch.Tensor,
+        hide_index: int = 0,
+    ) -> torch.Tensor:
         hidden_pose = torch.zeros((len(env_ids), 7), device=env.device)
         hidden_pose[:, :3] = torch.tensor(self._hide_position, device=env.device)
+        if hide_index > 0 and self._hide_spacing > 0.0:
+            grid_index = hide_index - 1
+            offset = torch.tensor(
+                [
+                    (grid_index % 8 + 1) * self._hide_spacing,
+                    (grid_index // 8) * self._hide_spacing,
+                    0.0,
+                ],
+                device=env.device,
+            )
+            hidden_pose[:, :3] += offset
         hidden_pose[:, 3] = 1.0
         return hidden_pose
+
+    def _set_collision_enabled(
+        self,
+        obj: RigidObject,
+        env: EmbodiedEnv,
+        env_ids: torch.Tensor,
+        enabled: bool | torch.Tensor,
+    ) -> None:
+        if not self._disable_hidden_collisions or not hasattr(obj, "enable_collision"):
+            return
+
+        if isinstance(enabled, torch.Tensor):
+            enable_mask = enabled.to(device=env.device, dtype=torch.bool)
+        else:
+            enable_mask = torch.full(
+                (len(env_ids),), bool(enabled), dtype=torch.bool, device=env.device
+            )
+
+        collision_env_ids = (
+            env_ids.detach().cpu().tolist()
+            if isinstance(env_ids, torch.Tensor)
+            else env_ids
+        )
+        obj.enable_collision(enable_mask, env_ids=collision_env_ids)
 
     def _hide_scene_objects(
         self,
         env: EmbodiedEnv,
         uids: list[str],
         env_ids: torch.Tensor | None = None,
+        update_visibility: bool = False,
     ) -> None:
         if env_ids is None:
             env_ids = torch.arange(env.num_envs, device=env.device)
 
-        hidden_pose = self._get_hidden_pose(env, env_ids)
-        for uid in uids:
+        for hide_index, uid in enumerate(uids):
+            hidden_pose = self._get_hidden_pose(env, env_ids, hide_index=hide_index)
             obj = env.sim.get_rigid_object(uid)
             if obj is None:
                 continue
-            obj.set_visible(False)
+            if update_visibility:
+                obj.set_visible(False)
             obj.set_local_pose(hidden_pose, env_ids=env_ids)
+            self._set_collision_enabled(obj, env, env_ids, False)
             obj.clear_dynamics(env_ids=env_ids)
 
     def _preload_asset_pool(self, env: EmbodiedEnv, params: Dict) -> None:
@@ -453,7 +508,9 @@ class replace_distractor_slots_from_library(Functor):
             pool_cfg.init_rot = (0.0, 0.0, 0.0)
 
             pool_obj = env.sim.add_rigid_object(cfg=pool_cfg)
-            pool_obj.set_visible(False)
+            # Keep pool objects renderable and hide them by pose. Repeated
+            # visibility toggles can touch native renderer state every reset.
+            pool_obj.set_visible(not self._toggle_visibility_on_reset)
             self._pool_uids.append(pool_uid)
 
     def _load_asset_paths(self, params: Dict) -> list[str]:
@@ -581,6 +638,9 @@ class replace_distractor_slots_from_library(Functor):
         appear_probs: List[float] | None = None,
         z_rotation_ranges: List[Tuple[float, float]] | None = None,
         hide_position: List[float] = [0.0, 0.0, -20.0],
+        hide_spacing: float = 0.5,
+        disable_hidden_collisions: bool = True,
+        toggle_visibility_on_reset: bool = False,
         avoid_uids: List[str] | None = None,
         min_distance_to_avoid: float = 0.0,
         max_resample_attempts: int = 20,
@@ -594,7 +654,17 @@ class replace_distractor_slots_from_library(Functor):
         """
         # NOTE: library-related kwargs are resolved during functor init from cfg.params.
         # They are kept in call signature for manager argument validation compatibility.
-        _ = (library_index_path, categories, folder_path, patterns, exts)
+        _ = (
+            library_index_path,
+            categories,
+            folder_path,
+            patterns,
+            exts,
+            hide_position,
+            hide_spacing,
+            disable_hidden_collisions,
+            toggle_visibility_on_reset,
+        )
 
         if env_ids is None:
             env_ids = torch.arange(env.num_envs, device=env.device)
@@ -627,8 +697,18 @@ class replace_distractor_slots_from_library(Functor):
 
         selected_uids = random.sample(self._pool_uids, k=len(entity_cfgs))
 
-        self._hide_scene_objects(env, self._pool_uids, env_ids=env_ids)
-        self._hide_scene_objects(env, self._slot_uids, env_ids=env_ids)
+        self._hide_scene_objects(
+            env,
+            self._pool_uids,
+            env_ids=env_ids,
+            update_visibility=self._toggle_visibility_on_reset,
+        )
+        self._hide_scene_objects(
+            env,
+            self._slot_uids,
+            env_ids=env_ids,
+            update_visibility=self._toggle_visibility_on_reset,
+        )
 
         for idx, uid in enumerate(selected_uids):
             obj = env.sim.get_rigid_object(uid)
@@ -665,11 +745,13 @@ class replace_distractor_slots_from_library(Functor):
             pose[:, 3] = torch.cos(yaw[:, 0] * 0.5)
             pose[:, 6] = torch.sin(yaw[:, 0] * 0.5)
 
-            final_pose = self._get_hidden_pose(env, env_ids)
+            final_pose = self._get_hidden_pose(env, env_ids, hide_index=idx)
             final_pose[appear_mask] = pose[appear_mask]
 
-            obj.set_visible(True)
+            if self._toggle_visibility_on_reset:
+                obj.set_visible(True)
             obj.set_local_pose(final_pose, env_ids=env_ids)
+            self._set_collision_enabled(obj, env, env_ids, appear_mask)
             obj.clear_dynamics(env_ids=env_ids)
 
         if physics_update_step > 0:
