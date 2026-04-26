@@ -351,7 +351,7 @@ def visualize_rigid_body_pose(
             arena_index=arena_index,
         )
     )
-    
+
 #####Distractor库实现##############################
 class replace_distractor_slots_from_library(Functor):
     """Replace distractor slots with random assets from a library on each reset.
@@ -417,20 +417,19 @@ class replace_distractor_slots_from_library(Functor):
         hide_index: int = 0,
     ) -> torch.Tensor:
         hidden_pose = torch.zeros((len(env_ids), 7), device=env.device)
-        hidden_pose[:, :3] = torch.tensor(self._hide_position, device=env.device)
-        if hide_index > 0 and self._hide_spacing > 0.0:
-            grid_index = hide_index - 1
-            offset = torch.tensor(
-                [
-                    (grid_index % 8 + 1) * self._hide_spacing,
-                    (grid_index // 8) * self._hide_spacing,
-                    0.0,
-                ],
-                device=env.device,
-            )
-            hidden_pose[:, :3] += offset
+        hidden_pose[:, :3] = torch.tensor(
+            self._compute_hidden_position(hide_index), device=env.device
+        )
         hidden_pose[:, 3] = 1.0
         return hidden_pose
+
+    def _compute_hidden_position(self, hide_index: int = 0) -> tuple[float, float, float]:
+        hidden_pos = list(self._hide_position)
+        if hide_index > 0 and self._hide_spacing > 0.0:
+            grid_index = hide_index - 1
+            hidden_pos[0] += (grid_index % 8 + 1) * self._hide_spacing
+            hidden_pos[1] += (grid_index // 8) * self._hide_spacing
+        return tuple(hidden_pos)
 
     def _set_collision_enabled(
         self,
@@ -493,7 +492,6 @@ class replace_distractor_slots_from_library(Functor):
             )
 
         template_cfg = deepcopy(template_asset.cfg)
-        hidden_pos = tuple(self._hide_position)
 
         for idx, asset_path in enumerate(self._asset_paths):
             base_name = os.path.splitext(os.path.basename(asset_path))[0]
@@ -504,7 +502,7 @@ class replace_distractor_slots_from_library(Functor):
             pool_cfg = deepcopy(template_cfg)
             pool_cfg.uid = pool_uid
             pool_cfg.shape.fpath = asset_path
-            pool_cfg.init_pos = hidden_pos
+            pool_cfg.init_pos = self._compute_hidden_position(idx)
             pool_cfg.init_rot = (0.0, 0.0, 0.0)
 
             pool_obj = env.sim.add_rigid_object(cfg=pool_cfg)
@@ -594,7 +592,7 @@ class replace_distractor_slots_from_library(Functor):
             asset = env.sim.get_asset(uid)
             if asset is None:
                 continue
-            ref_positions.append(asset.get_local_pose(to_matrix=True)[env_ids, :3, 3])
+            ref_positions.append(asset.get_local_pose(to_matrix=True)[env_ids, :2, 3])
 
         if len(ref_positions) == 0:
             return pos
@@ -605,7 +603,7 @@ class replace_distractor_slots_from_library(Functor):
         for _ in range(max_attempts):
             dist_ok = torch.ones(num_envs, dtype=torch.bool, device=env.device)
             for ref_pos in ref_positions:
-                delta = pos - ref_pos
+                delta = pos[..., :2] - ref_pos[..., :2]
                 d2 = torch.sum(delta * delta, dim=-1)
                 dist_ok = torch.logical_and(dist_ok, d2 >= threshold2)
 
