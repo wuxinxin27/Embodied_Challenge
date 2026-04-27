@@ -7,8 +7,8 @@
                 double radius = 5
             }
             dictionary Perspective = {
-                double3 position = (-0.06544562795974082, -0.08565272979185369, 0.04633743739704542)
-                double3 target = (0.04876444665979897, 0.10924267704075204, -0.061741330645388476)
+                double3 position = (-0.06080846067622905, -0.07773956970259258, 0.04194921395110009)
+                double3 target = (0.0487644466597991, 0.10924267704075222, -0.06174133064538859)
             }
             dictionary Right = {
                 double3 position = (0, -5, 0)
@@ -21,7 +21,7 @@
             string boundCamera = "/OmniverseKit_Persp"
         }
         dictionary omni_layer = {
-            string authoring_layer = "./pipette_good.usd"
+            string authoring_layer = "./xmh_bake.usda"
             dictionary locked = {
             }
             dictionary muteness = {
@@ -61,37 +61,102 @@ def Xform "root" (
             bindMaterialAs = "weakerThanDescendants"
         )
 
-        def Material "Material_009"
+        def Material "Material_009" (
+            customData = {
+                dictionary ui = {
+                    dictionary nodegraph = {
+                        dictionary node = {
+                            dictionary pos = {
+                                double2 output = (-192.4420166015625, -144.7909393310547)
+                            }
+                        }
+                    }
+                }
+            }
+        )
         {
+            token outputs:displacement.connect = </root/Looks/Material_009/UsdPreviewSurface.outputs:displacement>
             token outputs:mdl:displacement.connect = </root/Looks/Material_009/Shader.outputs:out>
             token outputs:mdl:surface.connect = </root/Looks/Material_009/Shader.outputs:out>
             token outputs:mdl:volume.connect = </root/Looks/Material_009/Shader.outputs:out>
+            token outputs:surface.connect = </root/Looks/Material_009/UsdPreviewSurface.outputs:surface>
+            uniform token ui:nodegraph:node:expansionState = "open"
 
-            def Shader "Shader"
+            def Shader "UsdPreviewSurface"
             {
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @./Materials/mdl_0008.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "Material_009"
-                token outputs:out (
+                uniform token info:id = "UsdPreviewSurface"
+                float inputs:clearcoat = 1
+                float inputs:clearcoatRoughness = 0.01
+                color3f inputs:diffuseColor = (0.18, 0.18, 0.18)
+                color3f inputs:diffuseColor.connect = </root/Looks/Material_009/UsdUVTexture.outputs:rgb>
+                float inputs:displacement
+                color3f inputs:emissiveColor = (0, 0, 0)
+                float inputs:ior = 1.5
+                float inputs:metallic
+                normal3f inputs:normal = (0, 0, 1)
+                float inputs:occlusion = 1
+                float inputs:opacity = 1
+                float inputs:opacityThreshold = 0.01 (
+                    connectability = "interfaceOnly"
+                )
+                float inputs:roughness = 1
+                color3f inputs:specularColor = (0, 0, 0)
+                int inputs:useSpecularWorkflow (
+                    connectability = "interfaceOnly"
+                )
+                token outputs:displacement (
                     renderType = "material"
                 )
+                token outputs:surface (
+                    renderType = "material"
+                )
+                uniform token ui:nodegraph:node:expansionState = "open"
             }
-        }
 
-        def Material "Material_010"
-        {
-            token outputs:mdl:displacement.connect = </root/Looks/Material_010/Shader.outputs:out>
-            token outputs:mdl:surface.connect = </root/Looks/Material_010/Shader.outputs:out>
-            token outputs:mdl:volume.connect = </root/Looks/Material_010/Shader.outputs:out>
-
-            def Shader "Shader"
+            def Shader "UsdUVTexture"
             {
-                uniform token info:implementationSource = "sourceAsset"
-                uniform asset info:mdl:sourceAsset = @./Materials/mdl_0009.mdl@
-                uniform token info:mdl:sourceAsset:subIdentifier = "Material_010"
-                token outputs:out (
-                    renderType = "material"
+                uniform token info:id = "UsdUVTexture"
+                float4 inputs:bias = (0, 0, 0, 0) (
+                    connectability = "interfaceOnly"
                 )
+                float4 inputs:fallback = (0, 0, 0, 1)
+                asset inputs:file = @./baked_textures_cwb0ahcb/mtl-base_color.jpg@ (
+                    connectability = "interfaceOnly"
+                )
+                float4 inputs:scale = (1, 1, 1, 1) (
+                    connectability = "interfaceOnly"
+                )
+                token inputs:sourceColorSpace = "sRGB" (
+                    allowedTokens = ["raw", "sRGB", "auto"]
+                    connectability = "interfaceOnly"
+                )
+                float2 inputs:st = (0, 0)
+                float2 inputs:st.connect = </root/Looks/Material_009/UsdPrimvarReader_float2.outputs:result>
+                token inputs:wrapS = "repeat" (
+                    allowedTokens = ["black", "clamp", "repeat", "mirror", "useMetadata"]
+                    connectability = "interfaceOnly"
+                )
+                token inputs:wrapT = "repeat" (
+                    allowedTokens = ["black", "clamp", "repeat", "mirror", "useMetadata"]
+                    connectability = "interfaceOnly"
+                )
+                float outputs:a
+                float outputs:b
+                float outputs:g
+                float outputs:r
+                float3 outputs:rgb
+                uniform token ui:nodegraph:node:expansionState = "open"
+            }
+
+            def Shader "UsdPrimvarReader_float2"
+            {
+                uniform token info:id = "UsdPrimvarReader_float2"
+                float2 inputs:fallback = (0, 0)
+                string inputs:varname = "st" (
+                    connectability = "interfaceOnly"
+                )
+                float2 outputs:result
+                uniform token ui:nodegraph:node:expansionState = "open"
             }
         }
     }
@@ -127,8 +192,8 @@ def Xform "root" (
             bool physics:collisionEnabled = 1
             bool physics:kinematicEnabled = 0
             bool physics:rigidBodyEnabled = 1
-            int physxConvexDecompositionCollision:hullVertexLimit = 32
-            int physxConvexDecompositionCollision:maxConvexHulls = 16
+            int physxConvexDecompositionCollision:hullVertexLimit = 64
+            int physxConvexDecompositionCollision:maxConvexHulls = 64
             bool physxRigidBody:disableGravity = 0
             bool physxRigidBody:enableCCD = 0
             int physxRigidBody:solverPositionIterationCount = 32
