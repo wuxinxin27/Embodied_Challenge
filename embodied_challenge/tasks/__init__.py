@@ -53,9 +53,8 @@ from .open_pan.open_pan import (
     OpenPanPickAndPlaceEnv,
     OpenPanPickAndPlaceAgentEnv,
 )
-from .rearrangement import (
-    RearrangementEnv,
-    RearrangementAgentEnv,
+from .rearrangement.rearrangement_v3 import (
+    RearrangementEnv3,
 )
 from .Articulated_object_operation.Articulated_object_operation import (
     ArticulatedobjectoperationEnv,
