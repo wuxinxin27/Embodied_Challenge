@@ -29,13 +29,12 @@ T_ARM_CAM = np.array(
     ],
     dtype=np.float64,
 )
-
 # Arm-base transform in world frame: T_world_arm
 T_WORLD_ARM = np.array(
     [
         [1.0, 0.0, 0.0, 0.233],
         [0.0, 1.0, 0.0, 0.300],
-        [0.0, 0.0, 1.0, 0.76],
+        [0.0, 0.0, 1.0, 0.835],
         [0.0, 0.0, 0.0, 1.000],
     ],
     dtype=np.float64,
@@ -47,7 +46,7 @@ ARM_IN_WORLD_IS_INVERSE = False # True means current T_WORLD_ARM is T_arm_world
 
 # Camera local axes for look-at construction.
 FORWARD_AXIS = "+z"
-UP_AXIS = "+y"
+UP_AXIS = "-y"
 
 # target = eye + TARGET_DISTANCE * forward_world
 TARGET_DISTANCE = 1.0
