@@ -160,15 +160,15 @@
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
                                                     "offset_value": 0.01,
-                                                    "direction": "x",
+                                                    "direction": "y",
                                                     "mode": "intrinsic"
                                                 }
                                             },
                                             {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": 0.04,
-                                                    "direction": "y",
+                                                    "offset_value": 0.035,
+                                                    "direction": "z",
                                                     "mode": "intrinsic"
                                                 }
                                             },
@@ -936,7 +936,7 @@
                                             {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": -0.2,
+                                                    "offset_value": -0.18,
                                                     "direction": "x",
                                                     "mode": "extrinsic"
                                                 }

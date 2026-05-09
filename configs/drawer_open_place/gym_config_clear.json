@@ -1,127 +1,9 @@
 {
     "id": "DrawerOpenPlace-v1",
-    "max_episodes": 700,
+    "max_episodes": 100,
     "max_episode_steps": 900,
     "env": {
         "events": {
-            "init_table_pose": {
-                "func": "randomize_rigid_object_pose",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "table"},
-                    "position_range": [[0.0, 0.0, 0], [0.0, 0.0, 0]],
-                    "relative_position": true
-                }
-            },
-            "random_light": {
-                "func": "randomize_light",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "light_1"},
-                    "position_range": [[-0.5, -0.5, 2], [0.5, 0.5, 2]],
-                    "color_range": [[0.6, 0.6, 0.6], [1, 1, 1]],
-                    "intensity_range": [50.0, 100.0]
-                }
-            },
-            "random_table_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "table"},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_robot_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "CobotMagic", "link_names": [".*"]},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_plane_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "default_plane"},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_camera_high_intrinsics": {
-                "func": "randomize_camera_intrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_high"},
-                    "focal_x_range": [-50, 50],
-                    "focal_y_range": [-50, 50]
-                }
-            },
-            "random_camera_left_wrist_intrinsics": {
-                "func": "randomize_camera_intrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_left_wrist"},
-                    "focal_x_range": [-20, 20],
-                    "focal_y_range": [-20, 20]
-                }
-            },
-            "random_camera_right_wrist_intrinsics": {
-                "func": "randomize_camera_intrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_right_wrist"},
-                    "focal_x_range": [-20, 20],
-                    "focal_y_range": [-20, 20]
-                }
-            },
-            "random_camera_high_extrinsics": {
-                "func": "randomize_camera_extrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_high"},
-                    "eye_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
-                    "target_range": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-                    "up_range": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
-                }
-            },
-            "random_camera_left_wrist_extrinsics": {
-                "func": "randomize_camera_extrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_left_wrist"},
-                    "pos_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
-                    "euler_range": [[0, 0, 0], [0, 0, 0]]
-                }
-            },
-            "random_camera_right_wrist_extrinsics": {
-                "func": "randomize_camera_extrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_right_wrist"},
-                    "pos_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
-                    "euler_range": [[0, 0, 0], [0, 0, 0]]
-                }
-            },
-            "random_robot_init_qpos": {
-                "func": "randomize_robot_qpos",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "CobotMagic", "control_parts": ["left_arm", "right_arm"]},
-                    "qpos_range": [[-0.02, -0.02, -0.1, -0.02, -0.02, -0.1], [0.02, 0.02, 0.1, 0.02, 0.02, 0.1]],
-                    "relative_qpos": true,
-                    "joint_ids": [0, 5, 6, 7, 12, 13]
-                }
-            },
             "random_duck_pose": {
                 "func": "randomize_rigid_object_pose",
                 "mode": "reset",
@@ -133,67 +15,19 @@
                     "relative_rotation": true
                 }
             },
-            "random_drawer_root_pose": {
-                "func": "randomize_articulation_root_pose",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "drawer"},
-                    "position_range": [[-0.01, -0.005, 0.0], [0.01, 0.005, 0.0]],
-                    "relative_position": true,
-                    "relative_rotation": false,
-                    "physics_update_step": 1
-                }
-            },
-            "random_duck_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "duck"},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_drawer_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "drawer", "link_names": [".*"]},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "randomize_distractor_slots": {
-                "func": "replace_distractor_slots_from_library",
+            "random_drawer_pose": {
+                "func": "randomize_entity_root_pose_group",
                 "mode": "reset",
                 "params": {
                     "entity_cfgs": [
-                        {"uid": "distractor_0"},
-                        {"uid": "distractor_1"}
+                        {"uid": "drawer"},
+                        {"uid": "drawer_background"}
                     ],
-                    "library_index_path": "embodied_challenge/Distractor/ASSET_INDEX.json",
-                    "categories": ["PaperCup", "fork", "spoon"],
-                    "position_ranges": [
-                        [[0.425, -0.30, 0.89], [0.925, 0.3, 0.92]],
-                        [[0.425, -0.30, 0.89], [0.925, 0.3, 0.92]]
-                    ],
-                    "appear_probs": [1.0, 1.0],
-                    "z_rotation_ranges": [
-                        [-180.0, 180.0],
-                        [-180.0, 180.0]
-                    ],
-                    "hide_position": [0.0, 0.0, -20.0],
-                    "avoid_uids": ["duck", "drawer"],
-                    "min_distance_to_avoid": 0.4,
-                    "max_resample_attempts": 30,
+                    "position_range": [[-0.01, -0.005, 0.0], [0.01, 0.005, 0.0]],
+                    "relative_position": true,
                     "physics_update_step": 1
                 }
             },
-
-
             "prepare_extra_attr": {
                 "func": "prepare_extra_attr",
                 "mode": "reset",
@@ -475,24 +309,6 @@
                 "params": {
                     "joint_ids": [6, 13]
                 }
-            },
-            "right_ee_pose": {
-                "func": "get_robot_eef_pose",
-                "mode": "add",
-                "name": "robot/right_ee_pose",
-                "params": {
-                    "part_name": "right_arm",
-                    "position_only": false
-                }
-            },
-            "left_ee_pose": {
-                "func": "get_robot_eef_pose",
-                "mode": "add",
-                "name": "robot/left_ee_pose",
-                "params": {
-                    "part_name": "left_arm",
-                    "position_only": false
-                }
             }
         },
         "dataset": {
@@ -512,11 +328,11 @@
                         ]
                     },
                     "instruction": {
-                        "lang": "Open the drawer with the right arm, then grasp the duck with the left arm and place it into the drawer"
+                        "lang": "Open the drawer, pick the tomato with the other arm then place it in the drawer."
                     },
                     "extra": {
                         "scene_type": "Sim",
-                        "task_description": "Open the drawer with the right arm, then grasp the duck with the left arm and place it into the drawer",
+                        "task_description": "drawer_open_place",
                         "data_type": "sim"
                     },
                     "use_videos": true
@@ -534,42 +350,11 @@
     "robot": {
         "uid": "CobotMagic",
         "robot_type": "CobotMagic",
-        "init_pos": [
-            0.0,
-            0.0,
-            0.835
-        ],
-        "init_qpos": [
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0.0,
-            0.0,
-            0,
-            0,
-            0,
-            0.0,
-            0,
-            0,
-            0,
-            0
-        ],
-        "drive_pros": {
-            "stiffness": {
-                "LEFT_JOINT[7-8]": 1200.0,
-                "RIGHT_JOINT[7-8]": 1200.0
-            },
-            "damping": {
-                "LEFT_JOINT[7-8]": 80.0,
-                "RIGHT_JOINT[7-8]": 80.0
-            },
-            "max_effort": {
-                "LEFT_JOINT[7-8]": 12000.0,
-                "RIGHT_JOINT[7-8]": 12000.0
-            }
+        "init_pos": [0.0, 0.0, 0.835],
+        "init_qpos": [-0.05918411, 0.08932595, 0.00076794, 0.00970403, -0.12870058, -0.21027726, -0.13548991, -0.08838347, 0.29586821,0.39285615,0.13372713,0.08686504,0.0,0.0,0.0,0.0],
+        "attrs": {
+            "contact_offset": 0.0002,
+            "rest_offset": 0.00005
         }
     },
     "sensor": [
@@ -581,9 +366,21 @@
             "enable_mask": false,
             "intrinsics": [606.315186, 606.100952, 320.549316, 245.877106],
             "extrinsics": {
-                "eye": [0.206931, 0.052728, 1.401134],
-                "target": [0.576285, -0.000645, 0.473375],
-                "up": [0.917003, -0.140871, 0.373178]
+                "eye": [
+                    0.257046,
+                    0.049382,
+                    1.459689
+                ],
+                "target": [
+                    0.599275,
+                    0.044517,
+                    0.520085
+                ],
+                "up": [
+                    0.939547,
+                    -0.010356,
+                    0.342262
+                ]
             }
         },
         {
@@ -595,8 +392,8 @@
             "intrinsics": [603.117004394531, 602.418640136719, 326.727478027344, 251.933990478516],
             "extrinsics": {
                 "parent": "right_link6",
-                "pos": [-0.12, 0.0, 0.04],
-                "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
+                "pos": [-0.12, 0.01, 0.03],
+                "quat": [0.1949, 0.6797, -0.6797, -0.1949]
             }
         },
         {
@@ -608,20 +405,26 @@
             "intrinsics": [603.117004394531, 602.418640136719, 326.727478027344, 251.933990478516],
             "extrinsics": {
                 "parent": "left_link6",
-                "pos": [-0.12, 0.0, 0.04],
-                "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
+                "pos": [-0.12, 0.01, 0.03],
+                "quat": [0.1949, 0.6797, -0.6797, -0.1949]
             }
         }
     ],
     "light": {
+        "indirect": {
+            "emission_light":{
+                "color": [1.0, 1.0, 1.0],
+                "intensity": 180
+            }
+        },
         "direct": [
             {
-                "uid": "light_1",
+                "uid": "light_0",
                 "light_type": "point",
                 "color": [1.0, 1.0, 1.0],
-                "intensity": 50.0,
-                "init_pos": [2.0, 0.0, 2.0],
-                "radius": 10.0
+                "intensity": 15.0,
+                "init_pos": [0.8, 0.0, 2.0],
+                "radius": 20.0
             }
         ]
     },
@@ -629,36 +432,107 @@
         {
             "uid": "table",
             "shape": {
-                "shape_type": "Mesh",
-                "fpath": "CircleTableSimple/circle_table_simple.ply",
-                "compute_uv": true
+                "shape_type": "Cube",
+                "size": [1.0, 1.0, 0.1],
+                "visual_material": {
+                    "uid": "white_table_mat",
+                    "base_color": [1.0, 1.0, 1.0, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
             },
             "attrs" : {
                 "mass": 10.0,
-                "static_friction": 2.0,
-                "dynamic_friction": 1.5,
-                "restitution": 0.01,
-                "contact_offset": 0.0002,
-                "rest_offset": 0.00005
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
             },
             "body_scale": [1, 1, 1],
             "body_type": "kinematic",
             "init_pos": [0.725, 0.0, 0.775],
-            "init_rot": [0, 90, 0]
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_back_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.04, 2.2, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [1.18, 0.0,0.8 ],
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_left_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.9, 0.04, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [0.74, 1.0, 0.8],
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_right_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.9, 0.04, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [0.74, -1.0, 0.8],
+            "init_rot": [0, 0, 0]
         }
-
     ],
     "rigid_object": [
         {
             "uid": "duck",
             "shape": {
                 "shape_type": "Mesh",
-                "fpath": "ToyDuck/toy_duck.glb"
+                "fpath": "/root/workspace/Embodied_Challenge/assets/tomato/tomato_asset_simready/asset_simready.obj"
             },
             "body_scale": [
-                0.395,
-                0.395,
-                0.395
+                1.0,
+                1.0,
+                1.0
             ],
             "init_pos": [
                 0.65,
@@ -666,9 +540,9 @@
                 0.87
             ],
             "init_rot": [
+                90,
                 0,
-                0,
-                90
+                0
             ],
             "attrs": {
                 "mass": 0.1,
@@ -682,20 +556,6 @@
                 "min_velocity_iters": 8
             },
             "max_convex_hull_num": 8
-        },
-        {
-            "uid": "distractor_0",
-            "shape": {
-                "shape_type": "Mesh",
-                "fpath": "/root/workspace/Embodied_Challenge/assets/Beaker/beaker.ply"
-            }
-        },
-        {
-            "uid": "distractor_1",
-            "shape": {
-                "shape_type": "Mesh",
-                "fpath": "/root/workspace/Embodied_Challenge/assets/Beaker/beaker.ply"
-            }
         }
     ],
     "rigid_object_group": [],
@@ -706,7 +566,12 @@
             "init_pos": [
                 0.84,
                 -0.1,
-                0.84
+                0.9
+            ],
+            "body_scale": [
+                1.0,
+                1.0,
+                0.35
             ],
             "init_rot": [
                 0.3,
@@ -716,6 +581,24 @@
             "attrs": {
                 "static_friction": 5.0,
                 "dynamic_friction": 4.8
+            },
+            "drive_pros": {
+                "stiffness": 20.0,
+                "damping": 5.0
+            }
+        },
+        {
+            "fpath": "SlidingBoxDrawer/SlidingBoxDrawer.urdf",
+            "uid": "drawer_background",
+            "init_pos": [0.84, -0.1, 0.825],
+            "body_scale": [1.0, 1.0, 0.35],
+            "body_type": "kinematic",
+            "init_rot": [0.3, 0, 180],
+            "attrs": {
+                "static_friction": 5.0,
+                "dynamic_friction": 4.8,
+                "contact_offset": 0.0002,
+                "rest_offset": 0.00005
             },
             "drive_pros": {
                 "stiffness": 20.0,

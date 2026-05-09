@@ -27,7 +27,7 @@ from .action_bank import (
     BeatHammerBlockActionBank,
 )
 
-__all__ = ["BeatHammerBlockActionBankEnv", "BeatHammerBlockAgentEnv"]
+__all__ = ["BeatHammerBlockEnv", "BeatHammerBlockEnvTest", "BeatHammerBlockAgentEnv"]
 
 
 
@@ -135,7 +135,7 @@ class BeatHammerBlockEnv(EmbodiedEnv):
         # button.urdf uses a single prismatic joint with range [-0.005, 0.0].
         # Treat any detectable displacement as success (with tiny epsilon to avoid numerical noise).
         press_depth = -button_qpos[:, 0]
-        movement_threshold = 0.004
+        movement_threshold = 0.0048
         success = press_depth >= movement_threshold
         # print(f"press_depth: {press_depth}, movement_threshold: {movement_threshold}")
         self._button_pressed |= success

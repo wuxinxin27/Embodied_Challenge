@@ -1,60 +1,18 @@
 {
     "id": "BeakerMixer-v0",
-    "max_episodes": 600,
+    "max_episodes": 100,
     "max_episode_steps": 500,
     "env": {
         "events": {
-            "init_table_pose": {
-                "func": "randomize_rigid_object_pose",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "table"},
-                    "position_range": [[0.0, 0.0, -0.04], [0.0, 0.0, 0.04]],
-                    "relative_position": true
-                }
-            },
             "random_light": {
                 "func": "randomize_light",
                 "mode": "interval",
                 "interval_step": 10,
                 "params": {
-                    "entity_cfg": {"uid": "light_1"},
+                    "entity_cfg": {"uid": "light_0"},
                     "position_range": [[-0.5, -0.5, 2], [0.5, 0.5, 2]],
-                    "color_range": [[0.6, 0.6, 0.6], [1.0, 1.0, 1.0]],
-                    "intensity_range": [50.0, 100.0]
-                }
-            },
-            "random_robot_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "CobotMagic", "link_names": [".*"]},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_table_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "table"},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_plane_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "default_plane"},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
+                    "color_range": [[0.6, 0.6, 0.6], [1, 1, 1]],
+                    "intensity_range": [10.0, 30.0]
                 }
             },
             "random_camera_high_intrinsics": {
@@ -66,83 +24,67 @@
                     "focal_y_range": [-50, 50]
                 }
             },
-            "random_camera_left_wrist_intrinsics": {
-                "func": "randomize_camera_intrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_left_wrist"},
-                    "focal_x_range": [-20, 20],
-                    "focal_y_range": [-20, 20]
-                }
-            },
-            "random_camera_right_wrist_intrinsics": {
-                "func": "randomize_camera_intrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_right_wrist"},
-                    "focal_x_range": [-20, 20],
-                    "focal_y_range": [-20, 20]
-                }
-            },
-             "random_camera_high_extrinsics": {
+            "random_camera_high_extrinsics": {
                 "func": "randomize_camera_extrinsics",
                 "mode": "reset",
                 "params": {
                     "entity_cfg": {"uid": "cam_high"},
-                    "eye_range": [[-0.01, -0.01,-0.01], [0.01, 0.01, 0.01]],
-                    "target_range": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-                    "up_range": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+                    "pos_range": [[0.0, -0.02, 0.0], [0.02, 0.02, 0.02]],
+                    "euler_range": [[-0.175, -0.175, -0.175], [0.175, 0.175, 0.175]]
                 }
             },
-            "random_camera_left_wrist_extrinsics": {
-                "func": "randomize_camera_extrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_left_wrist"},
-                    "pos_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
-                    "euler_range": [[0, 0, 0], [0, 0, 0]]
-                }
-            },
-            "random_camera_right_wrist_extrinsics": {
-                "func": "randomize_camera_extrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_right_wrist"},
-                    "pos_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
-                    "euler_range": [[0, 0, 0], [0, 0, 0]]
-                }
-            },
-            "random_robot_init_qpos": {
-                "func": "randomize_robot_qpos",
+            "random_robot_init_eef_pose": {
+                "func": "randomize_robot_eef_pose",
                 "mode": "reset",
                 "params": {
                     "entity_cfg": {"uid": "CobotMagic", "control_parts": ["left_arm", "right_arm"]},
-                    "qpos_range": [[-0.02, -0.02, -0.1, -0.02, -0.02, -0.1], [0.02, 0.02, 0.1, 0.02, 0.02, 0.1]],
+                    "position_range":  [[-0.01, -0.01, -0.01], [0.01, 0.01, 0]]
+                }
+            },
+            "random_robot_qpos": {
+                "func": "randomize_robot_qpos",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "CobotMagic"},
+                    "qpos_range": [
+                        [-0.06, -0.05, -0.06, -0.06, -0.05, -0.05, -0.06, -0.05, -0.06, -0.06, -0.05, -0.05],
+                        [0.06, 0.05, 0.06, 0.06, 0.05, 0.05, 0.06, 0.05, 0.06, 0.06, 0.05, 0.05]
+                    ],
                     "relative_qpos": true,
-                    "joint_ids": [0, 5, 6, 7, 12, 13]
+                    "joint_ids": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
                 }
             },
-
-            "random_beaker_pose": {
-                "func": "randomize_rigid_object_pose",
-                "mode": "reset",
+            "random_material": {
+                "func": "randomize_visual_material",
+                "mode": "interval",
+                "interval_step": 10,
                 "params": {
-                    "entity_cfg": {"uid": "beaker"},
-                    "position_range": [[-0.05, -0.05, 0.0], [0.05, 0.0, 0.0]],
-                    "rotation_range": [[0, 0, -90], [0, 0, 90]],
-                    "relative_position": true,
-                    "relative_rotation": true
+                    "entity_cfg": {"uid": "table"},
+                    "random_texture_prob": 0.5,
+                    "texture_path": "/root/workspace/Embodied_Challenge/assets/background_texture/100",
+                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
                 }
             },
-            "random_beaker_mixer_pose": {
-                "func": "randomize_rigid_object_pose",
-                "mode": "reset",
+            "random_robot_material": {
+                "func": "randomize_visual_material",
+                "mode": "interval",
+                "interval_step": 10,
                 "params": {
-                    "entity_cfg": {"uid": "beaker_mixer"},
-                    "position_range": [[-0.05, 0, 0.0], [0.05, 0.05, 0.0]],
-                    "rotation_range": [[0, 0, 0], [0, 30, 0]],
-                    "relative_position": true,
-                    "relative_rotation": true
+                    "entity_cfg": {"uid": "CobotMagic", "link_names": [".*"]},
+                    "random_texture_prob": 0.5,
+                    "texture_path": "/root/workspace/Embodied_Challenge/assets/background_texture/100",
+                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
+                }
+            },
+            "random_plane_material": {
+                "func": "randomize_visual_material",
+                "mode": "interval",
+                "interval_step": 10,
+                "params": {
+                    "entity_cfg": {"uid": "default_plane"},
+                    "random_texture_prob": 0.5,
+                    "texture_path": "/root/workspace/Embodied_Challenge/assets/background_texture/100",
+                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
                 }
             },
             "set_beaker_material": {
@@ -171,6 +113,28 @@
                     "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
                 }
             },
+            "random_beaker_pose": {
+                "func": "randomize_rigid_object_pose",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "beaker"},
+                    "position_range": [[-0.05, -0.05, 0.0], [0.05, 0.0, 0.0]],
+                    "rotation_range": [[0, 0, -90], [0, 0, 90]],
+                    "relative_position": true,
+                    "relative_rotation": true
+                }
+            },
+            "random_beaker_mixer_pose": {
+                "func": "randomize_rigid_object_pose",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "beaker_mixer"},
+                    "position_range": [[-0.05, 0, 0.0], [0.05, 0.05, 0.0]],
+                    "rotation_range": [[0, 0, 0], [0, 30, 0]],
+                    "relative_position": true,
+                    "relative_rotation": true
+                }
+            },
             "randomize_distractor_slots": {
                 "func": "replace_distractor_slots_from_library",
                 "mode": "reset",
@@ -182,18 +146,18 @@
                     "library_index_path": "/root/workspace/Embodied_Challenge/embodied_challenge/Distractor/ASSET_INDEX.json",
                     "categories": ["PaperCup", "fork", "spoon"],
                     "position_ranges": [
-                        [[0.425, -0.30, 0.89], [0.925, 0.3, 0.92]],
-                        [[0.425, -0.30, 0.89], [0.925, 0.3, 0.92]]
+                        [[0.4, -0.35, 0.89], [1.0, 0.35, 0.92]],
+                        [[0.4, -0.35, 0.89], [1.0, 0.35, 0.92]]
                     ],
                     "appear_probs": [1.0, 1.0],
                     "z_rotation_ranges": [
                         [-180.0, 180.0],
                         [-180.0, 180.0]
                     ],
-                    "hide_position": [0.0, 0.0, -20.0],
+                    "hide_position": [0.0, 0.0, -10.0],
                     "avoid_uids": ["beaker", "beaker_mixer"],
                     "min_distance_to_avoid": 0.4,
-                    "max_resample_attempts": 30,
+                    "max_resample_attempts": 100,
                     "physics_update_step": 1
                 }
             },
@@ -354,22 +318,20 @@
                     "joint_ids": [6, 13]
                 }
             },
-            "right_ee_pose": {
-                "func": "get_robot_eef_pose",
+            "beaker_pose": {
+                "func": "get_rigid_object_pose",
                 "mode": "add",
-                "name": "robot/right_ee_pose",
+                "name": "beaker_pose",
                 "params": {
-                    "part_name": "right_arm",
-                    "position_only": false
+                    "entity_cfg": {"uid": "beaker"}
                 }
             },
-            "left_ee_pose": {
-                "func": "get_robot_eef_pose",
+            "beaker_mixer_pose": {
+                "func": "get_rigid_object_pose",
                 "mode": "add",
-                "name": "robot/left_ee_pose",
+                "name": "beaker_mixer_pose",
                 "params": {
-                    "part_name": "left_arm",
-                    "position_only": false
+                    "entity_cfg": {"uid": "beaker_mixer"}
                 }
             }
         },
@@ -378,18 +340,18 @@
                 "func": "LeRobotRecorder",
                 "mode": "save",
                 "params": {
-                    "save_path": "/root/workspace/Embodied_Challenge/lerobot_dataset/",
+                    "save_path": "/root/workspace/Embodied_Challenge/lerobot_dataset/beaker_mixer_dual",
                     "robot_meta": {
                         "robot_type": "CobotMagic",
                         "control_freq": 25,
                         "control_parts": ["left_arm", "left_eef", "right_arm", "right_eef"]
                     },
                     "instruction": {
-                        "lang": "Right arm picks up the beaker and place it on the mixer, then left arm presses the switch"
+                        "lang": "Pick the beaker, place it on the mixer, then flip the toggle switch with the other arm."
                     },
                     "extra": {
                         "scene_type": "Sim",
-                        "task_description": "Right arm picks up the beaker and place it on the mixer, then left arm presses the switch",
+                        "task_description": "beaker_mixer_dual",
                         "data_type": "sim"
                     },
                     "use_videos": true
@@ -402,7 +364,7 @@
         "uid": "CobotMagic",
         "robot_type": "CobotMagic",
         "init_pos": [0.0, 0.0, 0.835],
-        "init_qpos": [-0.3, 0.3, 1.0, 1.0, -1.2, -1.2, 0.0, 0.0, 0.6, 0.6, 0.0, 0.0, 0.05, 0.05, 0.05, 0.05],
+        "init_qpos": [-0.05918411, 0.08932595, 0.00076794, 0.00970403, -0.12870058, -0.21027726, -0.13548991, -0.08838347, 0.29586821,0.39285615,0.13372713,0.08686504,0.0,0.0,0.0,0.0],
         "attrs": {
             "contact_offset": 0.0002,
             "rest_offset": 0.00005
@@ -417,9 +379,21 @@
             "enable_mask": false,
             "intrinsics": [606.315186, 606.100952, 320.549316, 245.877106],
             "extrinsics": {
-                "eye": [0.206931, 0.052728, 1.401134],
-                "target": [0.576285, -0.000645, 0.473375],
-                "up": [0.917003, -0.140871, 0.373178]
+                "eye": [
+                    0.257046,
+                    0.049382,
+                    1.459689
+                ],
+                "target": [
+                    0.599275,
+                    0.044517,
+                    0.520085
+                ],
+                "up": [
+                    0.939547,
+                    -0.010356,
+                    0.342262
+                ]
             }
         },
         {
@@ -431,8 +405,8 @@
             "intrinsics": [603.117004394531, 602.418640136719, 326.727478027344, 251.933990478516],
             "extrinsics": {
                 "parent": "right_link6",
-                "pos": [-0.12, 0.0, 0.04],
-                "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
+                "pos": [-0.12, 0.01, 0.03],
+                "quat": [0.1949, 0.6797, -0.6797, -0.1949]
             }
         },
         {
@@ -444,33 +418,26 @@
             "intrinsics": [603.117004394531, 602.418640136719, 326.727478027344, 251.933990478516],
             "extrinsics": {
                 "parent": "left_link6",
-                "pos": [-0.12, 0.0, 0.04],
-                "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
+                "pos": [-0.12, 0.01, 0.03],
+                "quat": [0.1949, 0.6797, -0.6797, -0.1949]
             }
-        },
-        {
-            "sensor_type": "ContactSensor",
-            "uid": "beaker_mixer_button_contact",
-            "rigid_uid_list": ["beaker_mixer"],
-            "articulation_cfg_list": [
-                {
-                    "articulation_uid": "CobotMagic",
-                    "link_name_list": ["left_link7", "left_link8"]
-                }
-            ],
-            "filter_need_both_actor": true,
-            "max_contacts_per_env": 128
         }
     ],
     "light": {
+        "indirect": {
+            "emission_light":{
+                "color": [1.0, 1.0, 1.0],
+                "intensity": 180
+            }
+        },
         "direct": [
             {
-                "uid": "light_1",
+                "uid": "light_0",
                 "light_type": "point",
                 "color": [1.0, 1.0, 1.0],
-                "intensity": 50.0,
-                "init_pos": [2.0, 0.0, 2.0],
-                "radius": 10.0
+                "intensity": 15.0,
+                "init_pos": [0.8, 0.0, 2.0],
+                "radius": 20.0
             }
         ]
     },
@@ -478,24 +445,95 @@
         {
             "uid": "table",
             "shape": {
-                "shape_type": "Mesh",
-                "fpath": "CircleTableSimple/circle_table_simple.ply",
-                "compute_uv": true
+                "shape_type": "Cube",
+                "size": [1.0, 1.0, 0.1],
+                "visual_material": {
+                    "uid": "white_table_mat",
+                    "base_color": [1.0, 1.0, 1.0, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
             },
             "attrs" : {
                 "mass": 10.0,
-                "static_friction": 2.0,
-                "dynamic_friction": 1.5,
-                "restitution": 0.01,
-                "contact_offset": 0.0002,
-                "rest_offset": 0.00005
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
             },
             "body_scale": [1, 1, 1],
             "body_type": "kinematic",
             "init_pos": [0.725, 0.0, 0.775],
-            "init_rot": [0, 90, 0]
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_back_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.04, 2.2, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [1.18, 0.0,0.8 ],
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_left_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.9, 0.04, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [0.74, 1.0, 0.8],
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_right_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.9, 0.04, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [0.74, -1.0, 0.8],
+            "init_rot": [0, 0, 0]
         }
-
     ],
     "rigid_object": [
         {

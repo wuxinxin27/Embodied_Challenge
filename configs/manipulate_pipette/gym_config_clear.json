@@ -1,128 +1,39 @@
 {
     "id": "ManipulatePipette-v1",
-    "max_episodes": 1000,
+    "max_episodes": 100,
     "max_episode_steps": 1000,
     "env": {
         "events": {
-            "init_table_pose": {
-                "func": "randomize_rigid_object_pose",
-                "mode": "reset",
+            "set_beaker1_material": {
+                "func": "set_rigid_object_visual_material",
+                "mode": "startup",
                 "params": {
-                    "entity_cfg": {"uid": "table"},
-                    "position_range": [[0.0, 0.0, 0], [0.0, 0.0, 0.0]],
-                    "relative_position": true
+                    "entity_cfg": {"uid": "beaker1"},
+                    "mat_cfg": {
+                        "uid": "cube_mat",
+                        "base_color": [1.0, 1.0, 0.999, 1.0],
+                        "ior": 1.47,
+                        "roughness": 0.005,
+                        "metallic": 0.0,
+                        "material_type": "BSDF"
+                    }
                 }
             },
-            "random_light": {
-                "func": "randomize_light",
-                "mode": "interval",
-                "interval_step": 10,
+            "set_beaker2_material": {
+                "func": "set_rigid_object_visual_material",
+                "mode": "startup",
                 "params": {
-                    "entity_cfg": {"uid": "light_1"},
-                    "position_range": [[-0.5, -0.5, 2], [0.5, 0.5, 2]],
-                    "color_range": [[0.6, 0.6, 0.6], [1.0, 1.0, 1.0]],
-                    "intensity_range": [50.0, 100.0]
+                    "entity_cfg": {"uid": "beaker2"},
+                    "mat_cfg": {
+                        "uid": "cube_mat",
+                        "base_color": [1.0, 1.0, 0.999, 1.0],
+                        "ior": 1.47,
+                        "roughness": 0.005,
+                        "metallic": 0.0,
+                        "material_type": "BSDF"
+                    }
                 }
             },
-            "random_robot_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "CobotMagic", "link_names": [".*"]},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_table_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "table"},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_plane_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "default_plane"},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "random_camera_high_intrinsics": {
-                "func": "randomize_camera_intrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_high"},
-                    "focal_x_range": [-50, 50],
-                    "focal_y_range": [-50, 50]
-                }
-            },
-            "random_camera_left_wrist_intrinsics": {
-                "func": "randomize_camera_intrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_left_wrist"},
-                    "focal_x_range": [-20, 20],
-                    "focal_y_range": [-20, 20]
-                }
-            },
-            "random_camera_right_wrist_intrinsics": {
-                "func": "randomize_camera_intrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_right_wrist"},
-                    "focal_x_range": [-20, 20],
-                    "focal_y_range": [-20, 20]
-                }
-            },
-             "random_camera_high_extrinsics": {
-                "func": "randomize_camera_extrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_high"},
-                    "eye_range": [[-0.01, -0.01,-0.01], [0.01, 0.01, 0.01]],
-                    "target_range": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
-                    "up_range": [[0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
-                }
-            },
-            "random_camera_left_wrist_extrinsics": {
-                "func": "randomize_camera_extrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_left_wrist"},
-                    "pos_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
-                    "euler_range": [[0, 0, 0], [0, 0, 0]]
-                }
-            },
-            "random_camera_right_wrist_extrinsics": {
-                "func": "randomize_camera_extrinsics",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "cam_right_wrist"},
-                    "pos_range": [[-0.01, -0.01, -0.01], [0.01, 0.01, 0.01]],
-                    "euler_range": [[0, 0, 0], [0, 0, 0]]
-                }
-            },
-            "random_robot_init_qpos": {
-                "func": "randomize_robot_qpos",
-                "mode": "reset",
-                "params": {
-                    "entity_cfg": {"uid": "CobotMagic", "control_parts": ["left_arm", "right_arm"]},
-                    "qpos_range": [[-0.02, -0.02, -0.1, -0.02, -0.02, -0.1], [0.02, 0.02, 0.1, 0.02, 0.02, 0.1]],
-                    "relative_qpos": true,
-                    "joint_ids": [0, 5, 6, 7, 12, 13]
-                }
-            },
-
             "init_pipette_pose": {
                 "func": "randomize_articulation_root_pose",
                 "mode": "reset",
@@ -156,48 +67,6 @@
                     "relative_rotation": true
                 }
             },
-            "random_pipette_material": {
-                "func": "randomize_visual_material",
-                "mode": "interval",
-                "interval_step": 10,
-                "params": {
-                    "entity_cfg": {"uid": "pipette", "link_names": [".*"]},
-                    "random_texture_prob": 0.5,
-                    "texture_path": "CocoBackground/coco",
-                    "base_color_range": [[0.2, 0.2, 0.2], [1.0, 1.0, 1.0]]
-                }
-            },
-            "set_beaker1_material": {
-                "func": "set_rigid_object_visual_material",
-                "mode": "startup",
-                "params": {
-                    "entity_cfg": {"uid": "beaker1"},
-                    "mat_cfg": {
-                        "uid": "cube_mat",
-                        "base_color": [1.0, 1.0, 0.999, 1.0],
-                        "ior": 1.47,
-                        "roughness": 0.005,
-                        "metallic": 0.0,
-                        "material_type": "BSDF"
-                    }
-                }
-            },
-            "set_beaker2_material": {
-                "func": "set_rigid_object_visual_material",
-                "mode": "startup",
-                "params": {
-                    "entity_cfg": {"uid": "beaker2"},
-                    "mat_cfg": {
-                        "uid": "cube_mat",
-                        "base_color": [1.0, 1.0, 0.999, 1.0],
-                        "ior": 1.47,
-                        "roughness": 0.005,
-                        "metallic": 0.0,
-                        "material_type": "BSDF"
-                    }
-                }
-            },
-
             "prepare_extra_attr": {
                 "func": "prepare_extra_attr",
                 "mode": "reset",
@@ -351,24 +220,6 @@
                 "params": {
                     "joint_ids": [6, 13]
                 }
-            },
-            "right_ee_pose": {
-                "func": "get_robot_eef_pose",
-                "mode": "add",
-                "name": "right_ee_pose",
-                "params": {
-                    "part_name": "right_arm",
-                    "position_only": false
-                }
-            },
-            "left_ee_pose": {
-                "func": "get_robot_eef_pose",
-                "mode": "add",
-                "name": "left_ee_pose",
-                "params": {
-                    "part_name": "left_arm",
-                    "position_only": false
-                }
             }
         },
        "dataset": {
@@ -387,7 +238,7 @@
                     },
                     "extra": {
                         "scene_type": "Sim",
-                        "task_description": "Use the pipette on the table to transfer liquid from one beaker to another",
+                        "task_description": "manipulate_pipette",
                         "data_type": "sim"
                     },
                     "use_videos": true
@@ -400,7 +251,7 @@
         "uid": "CobotMagic",
         "robot_type": "CobotMagic",
         "init_pos": [0.0, 0.0, 0.835],
-        "init_qpos": [-0.3,0.3,1.0,1.0,-1.2,-1.2,0.0,0.0,0.6,0.6,0.0,0.0,0.05,0.05,0.05,0.05],
+        "init_qpos": [-0.05918411, 0.08932595, 0.00076794, 0.00970403, -0.12870058, -0.21027726, -0.13548991, -0.08838347, 0.29586821,0.39285615,0.13372713,0.08686504,0.0,0.0,0.0,0.0],
         "drive_pros": {
             "stiffness": {
                 "LEFT_JOINT[7-8]": 600.0,
@@ -425,9 +276,21 @@
             "enable_mask": false,
             "intrinsics": [606.315186, 606.100952, 320.549316, 245.877106],
             "extrinsics": {
-                "eye": [0.206931, 0.052728, 1.401134],
-                "target": [0.576285, -0.000645, 0.473375],
-                "up": [0.917003, -0.140871, 0.373178]
+                "eye": [
+                    0.257046,
+                    0.049382,
+                    1.459689
+                ],
+                "target": [
+                    0.599275,
+                    0.044517,
+                    0.520085
+                ],
+                "up": [
+                    0.939547,
+                    -0.010356,
+                    0.342262
+                ]
             }
         },
         {
@@ -439,8 +302,8 @@
             "intrinsics": [603.117004394531, 602.418640136719, 326.727478027344, 251.933990478516],
             "extrinsics": {
                 "parent": "right_link6",
-                "pos": [-0.12, 0.0, 0.04],
-                "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
+                "pos": [-0.12, 0.01, 0.03],
+                "quat": [0.1949, 0.6797, -0.6797, -0.1949]
             }
         },
         {
@@ -452,20 +315,26 @@
             "intrinsics": [603.117004394531, 602.418640136719, 326.727478027344, 251.933990478516],
             "extrinsics": {
                 "parent": "left_link6",
-                "pos": [-0.12, 0.0, 0.04],
-                "quat": [0.1976964, 0.69034543, -0.69034543, -0.1976964]
+                "pos": [-0.12, 0.01, 0.03],
+                "quat": [0.1949, 0.6797, -0.6797, -0.1949]
             }
         }
     ],
     "light": {
+        "indirect": {
+            "emission_light":{
+                "color": [1.0, 1.0, 1.0],
+                "intensity": 180
+            }
+        },
         "direct": [
             {
-                "uid": "light_1",
+                "uid": "light_0",
                 "light_type": "point",
                 "color": [1.0, 1.0, 1.0],
-                "intensity": 50.0,
-                "init_pos": [2, 0, 2],
-                "radius": 10.0
+                "intensity": 15.0,
+                "init_pos": [0.8, 0.0, 2.0],
+                "radius": 20.0
             }
         ]
     },
@@ -473,22 +342,94 @@
         {
             "uid": "table",
             "shape": {
-                "shape_type": "Mesh",
-                "fpath": "CircleTableSimple/circle_table_simple.ply",
-                "compute_uv": true
+                "shape_type": "Cube",
+                "size": [1.0, 1.0, 0.1],
+                "visual_material": {
+                    "uid": "white_table_mat",
+                    "base_color": [1.0, 1.0, 1.0, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
             },
             "attrs" : {
                 "mass": 10.0,
-                "static_friction": 2.0,
-                "dynamic_friction": 1.5,
-                "restitution": 0.01,
-                "contact_offset": 0.0002,
-                "rest_offset": 0.00005
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
             },
             "body_scale": [1, 1, 1],
             "body_type": "kinematic",
             "init_pos": [0.725, 0.0, 0.775],
-            "init_rot": [0, 90, 0]
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_back_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.04, 2.2, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [1.18, 0.0,0.8 ],
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_left_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.9, 0.04, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [0.74, 1.0, 0.8],
+            "init_rot": [0, 0, 0]
+        },
+        {
+            "uid": "green_right_wall",
+            "shape": {
+                "shape_type": "Cube",
+                "size": [0.9, 0.04, 1.6],
+                "visual_material": {
+                    "uid": "real_green_wall_mat",
+                    "base_color": [0.0, 0.48, 0.16, 1.0],
+                    "metallic": 0.0,
+                    "roughness": 1.0
+                }
+            },
+            "attrs": {
+                "mass": 10.0,
+                "static_friction": 0.95,
+                "dynamic_friction": 0.9,
+                "restitution": 0.01
+            },
+            "body_scale": [1, 1, 1],
+            "body_type": "kinematic",
+            "init_pos": [0.74, -1.0, 0.8],
+            "init_rot": [0, 0, 0]
         }
     ],
     "rigid_object": [
@@ -538,7 +479,6 @@
             "init_pos": [0.65, 0.0, 0.83],
             "init_rot": [0, 0, 0]
         }
-
     ],
     "articulation": [
         {

@@ -23,8 +23,8 @@ from .items_handover_place.items_handover_place import (
 from .sample_loading.sample_loading import (
     SampleLoadingEnv,
 )
-from .sample_loading_duel.sample_loading_duel import (
-    SampleLoadingDuelEnv,
+from .sample_loading_dual.sample_loading_dual import (
+    SampleLoadingDualEnv,
 )
 from .manipulate_pipette.manipulate_pipette import (
     ManipulatePipetteEnv,
@@ -46,6 +46,7 @@ from .carry_basket.carry_basket import (
 )
 from .Beat_Hammer_Block.Beat_Hammer_Block import (
     BeatHammerBlockEnv,
+    BeatHammerBlockEnvTest,
     BeatHammerBlockAgentEnv,
 )
 
