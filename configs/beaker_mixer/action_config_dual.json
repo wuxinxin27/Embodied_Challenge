@@ -486,9 +486,9 @@
                                             {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": 0.1,
+                                                    "offset_value": -0.12,
                                                     "direction": "z",
-                                                    "mode": "extrinsic"
+                                                    "mode": "intrinsic"
                                                 }
                                             }
                                         ]
@@ -755,60 +755,6 @@
                             },
                             {
                                 "src_key": "left_arm_button_touch_pose",
-                                "dst_key": "left_arm_button_touch_up_pose",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name": "no_validation",
-                                        "kwargs": {},
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_offset_pose",
-                                                "kwargs": {
-                                                    "offset_value": 0.1,
-                                                    "direction": "z",
-                                                    "mode": "extrinsic"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "src_key": "left_arm_button_touch_up_pose",
-                                "dst_key": "left_arm_button_touch_up_qpos",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name": "get_ik_ret",
-                                        "kwargs": {
-                                            "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_aim_mixer_qpos']",
-                                            "control_part": "left_arm"
-                                        },
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_ik_qpos",
-                                                "kwargs": {
-                                                    "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_aim_mixer_qpos']",
-                                                    "control_part": "left_arm"
-                                                }
-                                            }
-                                        ]
-                                    },
-                                    {
-                                        "name": "is_qpos_flip",
-                                        "kwargs": {
-                                            "qpos_ref": "env.affordance_datas['left_arm_init_qpos']",
-                                            "qpos_ids": [3, 4],
-                                            "threshold": 3.455751918948773,
-                                            "mode": "delta",
-                                            "return_inverse": true
-                                        }
-                                    }
-                                ]
-                            },
-                            {
-                                "src_key": "left_arm_button_touch_pose",
                                 "dst_key": "left_arm_button_touch_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
@@ -851,51 +797,19 @@
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "left_arm_button_touch_pose",
-                                "dst_key": "left_arm_button_touch_pre_pose",
+                                "src_key": "left_arm_button_touch_qpos",
+                                "dst_key": "left_arm_button_touch_pre_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "no_validation",
                                         "kwargs": {},
                                         "pass_processes": [
                                             {
-                                                "name": "get_offset_pose",
+                                                "name": "get_offset_qpos",
                                                 "kwargs": {
-                                                    "offset_value": -0.08,
-                                                    "direction": "z",
-                                                    "mode": "intrinsic"
-                                                }
-                                            },
-                                            {
-                                                "name": "get_offset_pose",
-                                                "kwargs": {
-                                                    "offset_value": -0.02,
-                                                    "direction": "x",
-                                                    "mode": "intrinsic"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "src_key": "left_arm_button_touch_pre_pose",
-                                "dst_key": "left_arm_button_touch_pre_qpos",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name": "get_ik_ret",
-                                        "kwargs": {
-                                            "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_button_touch_qpos']",
-                                            "control_part": "left_arm"
-                                        },
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_ik_qpos",
-                                                "kwargs": {
-                                                    "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_button_touch_qpos']",
-                                                    "control_part": "left_arm"
+                                                    "offset_value": 15,
+                                                    "joint_list_offset": [0],
+                                                    "degrees": true
                                                 }
                                             }
                                         ]
@@ -922,51 +836,19 @@
                     "kwargs": {
                         "affordance_infos": [
                             {
-                                "src_key": "left_arm_button_touch_pose",
-                                "dst_key": "left_arm_button_up_pose",
+                                "src_key": "left_arm_button_touch_qpos",
+                                "dst_key": "left_arm_button_up_qpos",
                                 "valid_funcs_name_kwargs_proc": [
                                     {
                                         "name": "no_validation",
                                         "kwargs": {},
                                         "pass_processes": [
                                             {
-                                                "name": "get_offset_pose",
+                                                "name": "get_offset_qpos",
                                                 "kwargs": {
-                                                    "offset_value": 0.1,
-                                                    "direction": "z",
-                                                    "mode": "extrinsic"
-                                                }
-                                            },
-                                            {
-                                                "name": "get_offset_pose",
-                                                "kwargs": {
-                                                    "offset_value": 0.05,
-                                                    "direction": "y",
-                                                    "mode": "extrinsic"
-                                                }
-                                            }
-                                        ]
-                                    }
-                                ]
-                            },
-                            {
-                                "src_key": "left_arm_button_up_pose",
-                                "dst_key": "left_arm_button_up_qpos",
-                                "valid_funcs_name_kwargs_proc": [
-                                    {
-                                        "name": "get_ik_ret",
-                                        "kwargs": {
-                                            "ik_func": "env.robot.compute_ik",
-                                            "qpos_seed": "env.affordance_datas['left_arm_button_touch_qpos']",
-                                            "control_part": "left_arm"
-                                        },
-                                        "pass_processes": [
-                                            {
-                                                "name": "get_ik_qpos",
-                                                "kwargs": {
-                                                    "ik_func": "env.robot.compute_ik",
-                                                    "qpos_seed": "env.affordance_datas['left_arm_button_touch_qpos']",
-                                                    "control_part": "left_arm"
+                                                    "offset_value": -30,
+                                                    "joint_list_offset": [2],
+                                                    "degrees": true
                                                 }
                                             }
                                         ]
@@ -1139,35 +1021,21 @@
         ],
         "left_arm": [
             {
-                "left_init_to_button_up": {
+                "left_init_to_button_pre": {
                     "src": "left_arm_init_qpos",
-                    "sink": "left_arm_button_touch_up_qpos",
+                    "sink": "left_arm_button_touch_pre_qpos",
                     "duration": 60,
                     "name": "plan_trajectory",
                     "kwargs": {
                         "agent_uid": "left_arm",
                         "keypose_names": [
                             "left_arm_init_qpos",
-                            "left_arm_button_touch_up_qpos"
-                        ]
-                    }
-                }
-            },
-            {
-                "left_button_up_to_pre": {
-                    "src": "left_arm_button_touch_up_qpos",
-                    "sink": "left_arm_button_touch_pre_qpos",
-                    "duration": 25,
-                    "name": "plan_trajectory",
-                    "kwargs": {
-                        "agent_uid": "left_arm",
-                        "keypose_names": [
-                            "left_arm_button_touch_up_qpos",
                             "left_arm_button_touch_pre_qpos"
                         ]
                     }
                 }
             },
+
             {
                 "left_button_pre_to_touch": {
                     "src": "left_arm_button_touch_pre_qpos",
@@ -1293,9 +1161,9 @@
                 "ropen_place"
             ]
         },
-        "left_init_to_button_up": {
+        "left_button_pre_to_touch": {
             "depend_tasks": [
-                "right_place_to_place_pre"
+                "ropen_place"
             ]
         },
         "lopen_final": {

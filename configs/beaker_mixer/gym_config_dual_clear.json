@@ -24,13 +24,23 @@
                 "mode": "reset",
                 "params": {
                     "entity_cfg": {"uid": "beaker_mixer"},
-                    "position_range": [[0.55, 0.0, 0.9], [0.7, 0.1, 0.9]],
+                    "position_range": [[0.54, 0.0, 0.9], [0.65, 0.1, 0.9]],
                     "rotation_range": [[0, 0, 0], [0, 0, 0]],
                     "relative_position": false,
                     "relative_rotation": true
                 }
             },
-
+            "random_beaker_pose": {
+                "func": "randomize_rigid_object_pose",
+                "mode": "reset",
+                "params": {
+                    "entity_cfg": {"uid": "beaker"},
+                    "position_range": [[0.63, -0.25 ,0.85], [0.75, -0.2, 0.85]],
+                    "rotation_range": [[0, 0, -180], [0, 0, 180]],
+                    "relative_position": false,
+                    "relative_rotation": true
+                }
+            },
             "prepare_extra_attr": {
                 "func": "prepare_extra_attr",
                 "mode": "reset",
@@ -72,7 +82,7 @@
                             "name": "place_offset_extrinsic_z",
                             "mode": "static",
                             "entity_cfg": {"uid": "beaker_mixer"},
-                            "value": 0.08
+                            "value": 0.12
                         },
                         {
                             "name": "place_offset_intrinsic_z",
@@ -108,7 +118,7 @@
                             "name": "button_rotation_x",
                             "mode": "static",
                             "entity_cfg": {"uid": "beaker_mixer"},
-                            "value": -30
+                            "value": -35
                         },
                         {
                             "name": "button_rotation_y",
