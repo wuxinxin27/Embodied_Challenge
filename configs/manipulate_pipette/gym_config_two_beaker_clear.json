@@ -1,5 +1,5 @@
 {
-    "id": "ManipulatePipette-v1",
+    "id": "ManipulatePipetteTwoBeaker-v1",
     "max_episodes": 100,
     "max_episode_steps": 1000,
     "env": {
@@ -219,6 +219,30 @@
                 "name": "robot/qpos",
                 "params": {
                     "joint_ids": [6, 13]
+                }
+            },
+            "beaker_1_pose": {
+                "func": "get_rigid_object_pose",
+                "mode": "add",
+                "name": "beaker1_pose",
+                "params": {
+                    "entity_cfg": {"uid": "beaker1"}
+                }
+            },
+            "beaker_2_pose": {
+                "func": "get_rigid_object_pose",
+                "mode": "add",
+                "name": "beaker2_pose",
+                "params": {
+                    "entity_cfg": {"uid": "beaker2"}
+                }
+            },
+            "pipette_pose": {
+                "func": "get_rigid_object_pose",
+                "mode": "add",
+                "name": "pipette_pose",
+                "params": {
+                    "entity_cfg": {"uid": "pipette"}
                 }
             }
         },

@@ -43,10 +43,10 @@ from embodichain.lab.sim.planners import (
 from embodichain.utils import logger
 
 
-__all__ = ["ManipulatePipetteActionBank"]
+__all__ = ["ManipulatePipetteOneBeakerActionBank"]
 
 
-class ManipulatePipetteActionBank(ActionBank):
+class ManipulatePipetteOneBeakerActionBank(ActionBank):
 
     @staticmethod
     @tag_node
@@ -102,31 +102,6 @@ class ManipulatePipetteActionBank(ActionBank):
     @tag_node
     @resolve_env_params
     # DONE: valid & process qpos & fk
-    def generate_right_arm_aim_beaker2_qpos(
-        env,
-        valid_funcs_name_kwargs_proc: list | None = None,
-    ):
-        # FIXME FIXME FIXME FIXME
-        logger.log_warning(
-            f"CAUTION=============================THIS FUNC generate_right_arm_aim_beaker2_qpos IS WRONG!!!! PLEASE FIX IT!!!!"
-        )
-        right_aim_horizontal_angle = np.arctan2(
-            *(
-                (
-                    env.affordance_datas["beaker2_pose"][:2, 3]
-                    - env.affordance_datas["right_arm_base_pose"][:2, 3]
-                )[1::-1]
-            )
-        )
-        right_arm_aim_qpos = deepcopy(env.affordance_datas["right_arm_init_qpos"])
-        right_arm_aim_qpos[0] = right_aim_horizontal_angle
-        env.affordance_datas["right_arm_aim_beaker2_qpos"] = right_arm_aim_qpos
-        return True
-
-    @staticmethod
-    @tag_node
-    @resolve_env_params
-    # DONE: valid & process qpos & fk
     def generate_left_arm_aim_beaker1_qpos(
         env,
         valid_funcs_name_kwargs_proc: list | None = None,
@@ -146,31 +121,6 @@ class ManipulatePipetteActionBank(ActionBank):
         left_arm_aim_qpos = deepcopy(env.affordance_datas["left_arm_init_qpos"])
         left_arm_aim_qpos[0] = left_aim_horizontal_angle
         env.affordance_datas["left_arm_aim_beaker1_qpos"] = left_arm_aim_qpos
-        return True
-
-    @staticmethod
-    @tag_node
-    @resolve_env_params
-    # DONE: valid & process qpos & fk
-    def generate_left_arm_aim_beaker2_qpos(
-        env,
-        valid_funcs_name_kwargs_proc: list | None = None,
-    ):
-        # FIXME FIXME FIXME FIXME
-        logger.log_warning(
-            f"CAUTION=============================THIS FUNC generate_left_arm_aim_beaker2_qpos IS WRONG!!!! PLEASE FIX IT!!!!"
-        )
-        left_aim_horizontal_angle = np.arctan2(
-            *(
-                (
-                    env.affordance_datas["beaker2_pose"][:2, 3]
-                    - env.affordance_datas["left_arm_base_pose"][:2, 3]
-                )[1::-1]
-            )
-        )
-        left_arm_aim_qpos = deepcopy(env.affordance_datas["left_arm_init_qpos"])
-        left_arm_aim_qpos[0] = left_aim_horizontal_angle
-        env.affordance_datas["left_arm_aim_beaker2_qpos"] = left_arm_aim_qpos
         return True
 
 

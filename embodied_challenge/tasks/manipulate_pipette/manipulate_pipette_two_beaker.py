@@ -22,15 +22,15 @@ from embodichain.lab.gym.utils.registration import register_env
 from embodichain.utils import logger
 
 from embodichain.lab.gym.envs.tasks.tableware.base_agent_env import BaseAgentEnv
-from .action_bank import (
-    ManipulatePipetteActionBank,
+from .action_bank_two_beaker import (
+    ManipulatePipetteTwoBeakerActionBank,
 )
 
-__all__ = ["ManipulatePipetteEnv", "ManipulatePipetteAgentEnv"]
+__all__ = ["ManipulatePipetteTwoBeakerEnv", "ManipulatePipetteTwoBeakerAgentEnv"]
 
 
-@register_env("ManipulatePipette-v1", max_episode_steps=600)
-class ManipulatePipetteEnv(EmbodiedEnv):
+@register_env("ManipulatePipetteTwoBeaker-v1", max_episode_steps=600)
+class ManipulatePipetteTwoBeakerEnv(EmbodiedEnv):
     def __init__(self, cfg: EmbodiedEnvCfg = None, **kwargs):
         super().__init__(cfg, **kwargs)
 
@@ -55,7 +55,7 @@ class ManipulatePipetteEnv(EmbodiedEnv):
         """
         logger.log_info("Create demo action list for ManipulatePipetteTask.")
         if getattr(self, "action_config") is not None:
-            self._init_action_bank(ManipulatePipetteActionBank, self.action_config)
+            self._init_action_bank(ManipulatePipetteTwoBeakerActionBank, self.action_config)
             action_list = self.create_expert_demo_action_list(*args, **kwargs)
         else:
             logger.log_error("No action_config found in env, please check again.")
@@ -212,8 +212,8 @@ class ManipulatePipetteEnv(EmbodiedEnv):
 
 
 
-@register_env("ManipulatePipetteAgent-v1", max_episode_steps=600)
-class ManipulatePipetteAgentEnv(BaseAgentEnv, ManipulatePipetteEnv):
+@register_env("ManipulatePipetteTwoBeakerAgent-v1", max_episode_steps=600)
+class ManipulatePipetteTwoBeakerAgentEnv(BaseAgentEnv, ManipulatePipetteTwoBeakerEnv):
     def __init__(self, cfg: EmbodiedEnvCfg = None, **kwargs):
         super().__init__(cfg, **kwargs)
         super()._init_agents(**kwargs)

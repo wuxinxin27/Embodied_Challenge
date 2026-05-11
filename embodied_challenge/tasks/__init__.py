@@ -26,8 +26,13 @@ from .sample_loading.sample_loading import (
 from .sample_loading_dual.sample_loading_dual import (
     SampleLoadingDualEnv,
 )
-from .manipulate_pipette.manipulate_pipette import (
-    ManipulatePipetteEnv,
+from .manipulate_pipette.manipulate_pipette_one_beaker import (
+    ManipulatePipetteOneBeakerEnv,
+    ManipulatePipetteOneBeakerAgentEnv,
+)
+from .manipulate_pipette.manipulate_pipette_two_beaker import (
+    ManipulatePipetteTwoBeakerEnv,
+    ManipulatePipetteTwoBeakerAgentEnv,
 )
 from .drawer_open_place.drawer_open_place import (
     DrawerOpenPlaceAgentEnv,
