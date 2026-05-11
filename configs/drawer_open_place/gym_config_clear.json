@@ -572,9 +572,9 @@
                 "fpath": "/root/workspace/Embodied_Challenge/assets/tomato/tomato_asset_simready/asset_simready.obj"
             },
             "body_scale": [
-                1.0,
-                1.0,
-                1.0
+                0.8,
+                0.8,
+                0.8
             ],
             "init_pos": [
                 0.65,
