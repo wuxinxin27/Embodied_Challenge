@@ -195,6 +195,8 @@ class DrawerOpenPlaceActionBank(ActionBank):
         control_part: str | None = None,
         return_action: bool = False,
         duration: int = 15,
+        from_ratio: float = 0.0,
+        close_ratio: float | None = None,
         **kwargs,
     ):
         if return_action is False:
@@ -214,14 +216,20 @@ class DrawerOpenPlaceActionBank(ActionBank):
                 env, control_part, is_open=False
             ),
         )
-        close_ratio = float(env.affordance_datas.get(f"{control_part}_close_ratio", 1.0))
+        if close_ratio is None:
+            close_ratio = env.affordance_datas.get(f"{control_part}_close_ratio", 1.0)
+
+        from_ratio = max(0.0, min(1.0, float(from_ratio)))
         close_ratio = max(0.0, min(1.0, close_ratio))
+        open_qpos_np = DrawerOpenPlaceActionBank._to_numpy(open_qpos)
+        close_qpos_np = DrawerOpenPlaceActionBank._to_numpy(close_qpos)
+        start_qpos = open_qpos_np + (close_qpos_np - open_qpos_np) * from_ratio
         target_qpos = DrawerOpenPlaceActionBank._to_numpy(open_qpos) + (
-            DrawerOpenPlaceActionBank._to_numpy(close_qpos)
-            - DrawerOpenPlaceActionBank._to_numpy(open_qpos)
+            close_qpos_np
+            - open_qpos_np
         ) * close_ratio
         return DrawerOpenPlaceActionBank._interpolate_qpos(
-            open_qpos, target_qpos, duration
+            start_qpos, target_qpos, duration
         )
 
     @staticmethod

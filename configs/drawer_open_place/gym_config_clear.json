@@ -1,6 +1,6 @@
 {
     "id": "DrawerOpenPlace-v1",
-    "max_episodes": 100,
+    "max_episodes": 1,
     "max_episode_steps": 900,
     "env": {
         "events": {
@@ -49,8 +49,10 @@
                         {"uid": "drawer"},
                         {"uid": "drawer_background"}
                     ],
-                    "position_range": [[-0.01, -0.18, 0.0], [0.05, 0.0, 0.0]],
+                    "position_range": [[-0.15, -0.18, 0.0], [0.0, 0.0, 0.0]],
+                    "rotation_range": [[0.3, 0, 180], [0.3, 0, 180]],
                     "relative_position": true,
+                    "relative_rotation": false,
                     "physics_update_step": 1
                 }
             },
