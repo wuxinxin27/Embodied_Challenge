@@ -28,7 +28,7 @@ from embodied_challenge.managers.events import visualize_rigid_body_pose
 from embodichain.lab.gym.envs.tasks.tableware.base_agent_env import BaseAgentEnv
 from .action_bank import CarryBasketActionBank
 
-__all__ = ["CarryBasketEnvV2", "CarryBasketAgentEnvV2"]
+__all__ = ["CarryBasketEnvV2", "CarryBasketTestEnvV2", "CarryBasketAgentEnvV2"]
 
 
 @register_env("CarryBasket-v2", max_episode_steps=600)
@@ -271,18 +271,22 @@ class CarryBasketEnvV2(EmbodiedEnv):
 
         return actions
     def is_task_success(self, **kwargs) -> torch.Tensor:
-        try:
-            basket = self.sim.get_rigid_object("basket")
-            milk = self.sim.get_rigid_object("milk")
-            basket_pose = basket.get_local_pose(to_matrix=True)
-            milk_pose = milk.get_local_pose(to_matrix=True)
-            basket_xy = basket_pose[:, :2, 3]
-            milk_xy = milk_pose[:, :2, 3]
-            dist = torch.linalg.norm(milk_xy - basket_xy, dim=-1)
-            return dist < 0.12
-        except Exception:
-            return torch.zeros((self.num_envs,), dtype=torch.bool, device=self.device)
+        basket = self.sim.get_rigid_object("basket")
+        milk = self.sim.get_rigid_object("milk")
+        basket_pose = basket.get_local_pose(to_matrix=True)
+        milk_pose = milk.get_local_pose(to_matrix=True)
+        basket_xy = basket_pose[:, :2, 3]
+        milk_xy = milk_pose[:, :2, 3]
+        dist = torch.linalg.norm(milk_xy - basket_xy, dim=-1)
+        up = milk_pose[:, 2, 3] > basket_pose[:, 2, 3]
+        return dist < 0.12 and up
 
+@register_env("CarryBasketTest-v2", max_episode_steps=600)
+class CarryBasketTestEnvV2(CarryBasketEnvV2):
+    def compute_task_state(self, **kwargs):
+    # It is difficult to determine whether a task has failed or succeeded based on conditions,
+    # and manual assessment is required.
+        return {}, {}, {}
 
 @register_env("CarryBasketAgent-v2", max_episode_steps=600)
 class CarryBasketAgentEnvV2(BaseAgentEnv, CarryBasketEnvV2):

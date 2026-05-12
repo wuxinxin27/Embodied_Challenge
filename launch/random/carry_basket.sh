@@ -3,4 +3,3 @@ python -m scripts.run_env --gym_config configs/carry_basket/gym_config_random.js
        --num_envs 1 \
        --enable_rt \
       # --filter_visual_rand \
-      # --enable_rt \

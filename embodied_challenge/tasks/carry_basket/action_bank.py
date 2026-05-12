@@ -97,11 +97,11 @@ class CarryBasketActionBank(ActionBank):
     @staticmethod
     @tag_node
     @resolve_env_params
-    def generate_left_arm_aim_qpos(
+    def generate_left_arm_aim_milk_qpos(
         env,
         valid_funcs_name_kwargs_proc: list | None = None,
     ):
-        
+
         left_aim_horizontal_angle = np.arctan2(
             *(
                 (
@@ -112,7 +112,27 @@ class CarryBasketActionBank(ActionBank):
         )
         left_arm_aim_qpos = deepcopy(env.affordance_datas["left_arm_init_qpos"])
         left_arm_aim_qpos[0] = left_aim_horizontal_angle
-        env.affordance_datas["left_arm_aim_qpos"] = left_arm_aim_qpos
+        env.affordance_datas["left_arm_aim_milk_qpos"] = left_arm_aim_qpos
+        return True
+    @staticmethod
+    @tag_node
+    @resolve_env_params
+    def generate_left_arm_aim_basket_qpos(
+        env,
+        valid_funcs_name_kwargs_proc: list | None = None,
+    ):
+
+        left_aim_horizontal_angle = np.arctan2(
+            *(
+                (
+                    env.affordance_datas["basket_pose"][:2, 3]
+                    - env.affordance_datas["left_arm_base_pose"][:2, 3]
+                )[1::-1]
+            )
+        )
+        left_arm_aim_qpos = deepcopy(env.affordance_datas["left_arm_init_qpos"])
+        left_arm_aim_qpos[0] = left_aim_horizontal_angle
+        env.affordance_datas["left_arm_aim_basket_qpos"] = left_arm_aim_qpos
         return True
 
     @staticmethod
@@ -123,7 +143,7 @@ class CarryBasketActionBank(ActionBank):
         env,
         valid_funcs_name_kwargs_proc: list | None = None,
     ):
-        
+
         right_aim_horizontal_angle = np.arctan2(
             *(
                 (
