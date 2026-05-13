@@ -152,7 +152,7 @@
                         {"uid": "distractor_0"},
                         {"uid": "distractor_1"}
                     ],
-                    "library_index_path": "embodied_challenge/Distractor/ASSET_INDEX.json",
+                    "library_index_path": "/root/workspace/Embodied_Challenge/embodied_challenge/Distractor/ASSET_INDEX.json",
                     "categories": ["PaperCup", "fork", "spoon"],
                     "position_ranges": [
                         [[0.4, -0.35, 0.89], [1.0, 0.35, 0.92]],

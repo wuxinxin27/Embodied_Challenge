@@ -55,6 +55,36 @@ class EpisodeResult:
     mean_model_forward_ms: float | None
     total_model_forward_ms: float
     wall_time_s: float
+    action_results: list[ActionStepResult] | None = None
+
+
+@dataclass
+class ActionStepResult:
+    step: int
+    model_infer_call: int
+    chunk_index: int
+    chunk_length: int
+    from_new_inference: bool
+    model_forward_ms: float | None
+    raw_action: list[float]
+    env_action: list[float]
+    raw_action_dim: int
+    env_action_dim: int
+    clipped: bool
+    truncated_to_action_dim: bool
+    success: bool
+    terminated: bool
+    truncated: bool
+
+
+@dataclass
+class PolicyActionResult:
+    action: Any
+    model_infer_call: int
+    chunk_index: int
+    chunk_length: int
+    from_new_inference: bool
+    model_forward_ms: float | None
 
 
 class OpenPIChunkPolicy:
@@ -93,7 +123,9 @@ class OpenPIChunkPolicy:
         self.infer_calls = 0
         self.model_forward_ms.clear()
 
-    def next_action(self, obs: dict[str, Any]) -> np.ndarray:
+    def next_action(self, obs: dict[str, Any]) -> PolicyActionResult:
+        from_new_inference = False
+        model_forward_ms = None
         if self._chunk is None or self._chunk_index >= len(self._chunk):
             result = self._policy.infer(obs)
             if "actions" not in result:
@@ -107,14 +139,24 @@ class OpenPIChunkPolicy:
             self._chunk = actions
             self._chunk_index = 0
             self.infer_calls += 1
+            from_new_inference = True
 
             timing = result.get("policy_timing", result.get("server_timing", {}))
             if "infer_ms" in timing:
-                self.model_forward_ms.append(float(timing["infer_ms"]))
+                model_forward_ms = float(timing["infer_ms"])
+                self.model_forward_ms.append(model_forward_ms)
 
-        action = self._chunk[self._chunk_index]
+        chunk_index = self._chunk_index
+        action = self._chunk[chunk_index]
         self._chunk_index += 1
-        return action
+        return PolicyActionResult(
+            action=action,
+            model_infer_call=self.infer_calls,
+            chunk_index=chunk_index,
+            chunk_length=len(self._chunk),
+            from_new_inference=from_new_inference,
+            model_forward_ms=model_forward_ms,
+        )
 
     def close(self) -> None:
         self._policy.close()
@@ -255,6 +297,14 @@ def parse_args() -> argparse.Namespace:
         "--output",
         default="openpi0_embodichain_eval.json",
         help="Path to write detailed JSON results.",
+    )
+    parser.add_argument(
+        "--record_action_results",
+        "--record_actions",
+        dest="record_action_results",
+        default=False,
+        action="store_true",
+        help="Store every policy action and executed env action in the output JSON.",
     )
     return parser.parse_args()
 
@@ -464,24 +514,37 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
             truncated = False
             success = False
             action_steps = 0
+            episode_action_results: list[ActionStepResult] = []
             wall_start = time.monotonic()
 
-            for _ in range(max_steps):
+            for step in range(max_steps):
                 openpi_obs = make_openpi_observation(
                     obs,
                     args=args,
                     prompt=prompt,
                     action_dim=action_dim,
                 )
-                action = policy.next_action(openpi_obs).reshape(-1)
-                if action.shape[0] < action_dim:
+                policy_action = policy.next_action(openpi_obs)
+                raw_action = np.asarray(policy_action.action, dtype=np.float32).reshape(-1)
+                raw_action_dim = int(raw_action.shape[0])
+                if raw_action.shape[0] < action_dim:
                     raise ValueError(
-                        f"OpenPI action dim {action.shape[0]} is smaller than env action dim {action_dim}."
+                        f"OpenPI action dim {raw_action.shape[0]} is smaller than env action dim {action_dim}."
                     )
-                if action.shape[0] > action_dim:
-                    action = action[:action_dim]
+                truncated_to_action_dim = raw_action.shape[0] > action_dim
+                action = raw_action[:action_dim] if truncated_to_action_dim else raw_action
+
+                clipped = False
                 if args.clip_actions:
-                    action = np.clip(action, low, high)
+                    clipped_action = np.clip(action, low, high)
+                    clipped = not np.allclose(
+                        action,
+                        clipped_action,
+                        rtol=0.0,
+                        atol=0.0,
+                        equal_nan=True,
+                    )
+                    action = clipped_action
 
                 action_tensor = torch.as_tensor(
                     action[None, :],
@@ -494,6 +557,26 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 success = _bool_from_tensor(info.get("success", terminated_t))
                 terminated = _bool_from_tensor(terminated_t)
                 truncated = _bool_from_tensor(truncated_t)
+                if args.record_action_results:
+                    episode_action_results.append(
+                        ActionStepResult(
+                            step=step,
+                            model_infer_call=policy_action.model_infer_call,
+                            chunk_index=policy_action.chunk_index,
+                            chunk_length=policy_action.chunk_length,
+                            from_new_inference=policy_action.from_new_inference,
+                            model_forward_ms=policy_action.model_forward_ms,
+                            raw_action=raw_action.tolist(),
+                            env_action=action.astype(np.float32, copy=False).tolist(),
+                            raw_action_dim=raw_action_dim,
+                            env_action_dim=action_dim,
+                            clipped=clipped,
+                            truncated_to_action_dim=truncated_to_action_dim,
+                            success=success,
+                            terminated=terminated,
+                            truncated=truncated,
+                        )
+                    )
                 if terminated or truncated:
                     break
 
@@ -510,6 +593,7 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
                 mean_model_forward_ms=float(np.mean(infer_times)) if infer_times else None,
                 total_model_forward_ms=float(np.sum(infer_times)) if infer_times else 0.0,
                 wall_time_s=time.monotonic() - wall_start,
+                action_results=episode_action_results if args.record_action_results else None,
             )
             episode_results.append(result)
             print(
@@ -547,6 +631,8 @@ def evaluate(args: argparse.Namespace) -> dict[str, Any]:
         "action_config": args.action_config,
         "prompt": prompt,
         "policy_input_format": args.policy_input_format,
+        "clip_actions": args.clip_actions,
+        "record_action_results": args.record_action_results,
         "openpi_server_metadata": policy.metadata,
         "summary": summary,
         "episodes": [asdict(result) for result in episode_results],
