@@ -15,34 +15,20 @@ cd "$REPO_ROOT"
 
 if [[ "$#" -eq 1 && ("$1" == "-h" || "$1" == "--help") ]]; then
     echo -e "\n\033[1;33mUsage:\033[0m"
-    echo -e "  $0 \033[1;32m<task_name>\033[0m \033[1;34m<setting(random|clear)>\033[0m \033[1;35m[extra_args...]\033[0m\n"
+    echo -e "  $0 \033[1;32m<task_name>\033[0m \033[1;34m<setting(random|clear)>\033[0m \033[1;34m<format(3_0|2_1)>\033[0m \033[1;35m[extra_args...]\033[0m\n"
 
     echo -e "\033[1;33mAvailable Extra Arguments:\033[0m"
     echo -e "  \033[1;35m--filter_visual_rand\033[0m     : Disable visual randomization"
-    echo -e "  \033[1;35m--filter_dataset_saving\033[0m  : Disable dataset saving\n"
+    echo -e "  \033[1;35m--filter_dataset_saving\033[0m  : Disable dataset saving"
+    echo -e "  \033[1;35m--max_episodes <num>\033[0m  : Specify the maximum number of episodes to generate"
     echo -e "  \033[1;35m--headless\033[0m  : Run in headless mode\n"
 
-    echo -e "\033[1;33mAvailable task name examples:\033[0m"
+    source "$SCRIPT_DIR/print_available_tasks.sh"
 
-    echo -e "  \033[1;36m[ Low-level tasks ]\033[0m"
-    echo -e "    \033[0;32m✦ click_bell\033[0m"
-    echo -e "    \033[0;32m✦ handle_basket\033[0m"
-    echo -e "    \033[0;32m✦ water_pouring\033[0m"
-    echo -e "    \033[0;32m✦ table_rearrangement\033[0m\n"
-
-    echo -e "  \033[1;36m[ Mid-level tasks ]\033[0m"
-    echo -e "    \033[0;32m✦ items_handover\033[0m"
-    echo -e "    \033[0;32m✦ drawer_open_place\033[0m"
-    echo -e "    \033[0;32m✦ mixer_operating\033[0m\n"
-
-    echo -e "  \033[1;36m[ High-level tasks ]\033[0m"
-    echo -e "    \033[0;32m✦ item_assembly\033[0m"
-    echo -e "    \033[0;32m✦ manipulate_pipette\033[0m"
-    echo -e "    \033[0;32m✦ sample_loading\033[0m\n"
     exit 0
 fi
 
-if [ "$#" -lt 2 ]; then
+if [ "$#" -lt 3 ]; then
     echo -e "\n\033[1;31mError: Missing required arguments.\033[0m"
     echo -e "Run \033[1;35m$0 -h\033[0m or \033[1;35m$0 --help\033[0m for usage details.\n"
     exit 1
@@ -50,7 +36,9 @@ fi
 
 TASK_NAME=$1
 SETTING=$2
-shift 2
+FORMAT=$3
+shift 3
+
 EXTRA_ARGS=("$@")
 
 # Dynamically combine paths
@@ -96,4 +84,35 @@ RUN_CMD+=("${EXTRA_ARGS[@]}")
 
 echo "Running command:"
 echo "${RUN_CMD[@]}"
+echo "========================================="
+
 "${RUN_CMD[@]}"
+sleep 5;
+
+if [ "$FORMAT" == "2_1" ]; then
+    echo "========================================="
+    echo -e "\033[1;36mConverting newly generated dataset to 2.1 format...\033[0m"
+
+    LATEST_REL_PATH=$(python scripts/_find_latest_datasets.py "$TASK_NAME" --count 1)
+
+    if [[ "$LATEST_REL_PATH" == *"ERROR"* ]]; then
+        echo -e "\033[1;31mError: Could not find generated dataset for conversion.\033[0m"
+    else
+        DATASET_ID=$(basename "$LATEST_REL_PATH")
+        DATASET_ROOT="$REPO_ROOT/lerobot_dataset/$TASK_NAME"
+
+        echo -e "Found New Dataset: \033[1;32m$DATASET_ID\033[0m"
+
+        echo "Running conversion: scripts/convert_lerobot3.0_to_2.1.py --repo-id \"$DATASET_ID\" --root \"$DATASET_ROOT\""
+        python scripts/convert_lerobot3.0_to_2.1.py --repo-id "$DATASET_ID" --root "$DATASET_ROOT"
+
+        echo -e "\033[1;32mConversion completed for: $DATASET_ID\033[0m"
+
+        if [ -d "$REPO_ROOT/lerobot_dataset/${LATEST_REL_PATH}_v3.0" ]; then
+            echo -e "\033[1;32mOriginal 3.0 dataset removed: $REPO_ROOT/lerobot_dataset/${LATEST_REL_PATH}_v3.0\033[0m"
+            rm -rf "$REPO_ROOT/lerobot_dataset/${LATEST_REL_PATH}_v3.0"
+        fi
+    fi
+fi
+chmod 777 -R "$REPO_ROOT/lerobot_dataset/"
+
