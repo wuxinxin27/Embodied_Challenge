@@ -33,7 +33,7 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 
 for path in (
     REPO_ROOT / "EmbodiChain",
-    REPO_ROOT / "Embodied_Challenge",
+    REPO_ROOT / "RoboSynChallenge",
     REPO_ROOT / "openpi" / "src",
     REPO_ROOT / "openpi" / "packages" / "openpi-client" / "src",
 ):
@@ -310,14 +310,14 @@ def parse_args() -> argparse.Namespace:
 
 
 def _import_embodichain_runtime() -> None:
-    import embodied_challenge  # noqa: F401
+    import robosynchallenge  # noqa: F401
     import embodichain.lab.gym.utils.gym_utils as gym_utils
 
     gym_utils.DEFAULT_MANAGER_MODULES = gym_utils.DEFAULT_MANAGER_MODULES + [
-        "embodied_challenge.managers.actions",
-        "embodied_challenge.managers.datasets",
-        "embodied_challenge.managers.events",
-        "embodied_challenge.managers.observations",
+        "robosynchallenge.managers.actions",
+        "robosynchallenge.managers.datasets",
+        "robosynchallenge.managers.events",
+        "robosynchallenge.managers.observations",
     ]
 
 

@@ -1,5 +1,5 @@
 [project]
-name = "embodied_challenge"
+name = "robosynchallenge"
 description = "Template repository for building Embodied AI task environment using EmbodiChain."
 readme = "README.md"
 requires-python = ">=3.10"
@@ -24,7 +24,7 @@ dependencies = [
 ]
 
 [project.urls]
-Repository = "https://github.com/wuxinxin27/Embodied_Challenge.git"
+Repository = "https://github.com/EDEM-AI/RoboSynChallenge"
 
 [build-system]
 requires = ["setuptools>=61.0", "wheel"]
@@ -35,6 +35,6 @@ where = ["."]
 exclude = ["docs"]
 
 [tool.setuptools.dynamic]
-version = { file = ["Embodied_Challenge/VERSION"] }
+version = { file = ["RoboSynChallenge/VERSION"] }
 
 [tool.black]

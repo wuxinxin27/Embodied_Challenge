@@ -38,24 +38,24 @@ def default_foreground(config):
     return result
 
 def make_env(opt):
-    import embodied_challenge, gymnasium as gym  # noqa: F401
+    import robosynchallenge, gymnasium as gym  # noqa: F401
     import embodichain.lab.gym.utils.gym_utils as gym_utils
     from embodichain.lab.gym.utils.gym_utils import config_to_cfg, merge_args_with_gym_config
     from embodichain.lab.sim import SimulationManagerCfg
 
     for suffix in ("actions", "datasets", "events", "observations"):
-        module = f"embodied_challenge.managers.{suffix}"
-        if module not in gym_utils.DEFAULT_MANAGER_MODULES: 
+        module = f"robosynchallenge.managers.{suffix}"
+        if module not in gym_utils.DEFAULT_MANAGER_MODULES:
             gym_utils.DEFAULT_MANAGER_MODULES.append(module)
-    
+
     raw = read_json(opt.gym_config); config = deepcopy(raw)
-    
+
     for sensor in config.get("sensor", []) or []:
-        if sensor.get("sensor_type") in ("Camera", "StereoCamera"): 
+        if sensor.get("sensor_type") in ("Camera", "StereoCamera"):
             sensor["enable_mask"] = True
-    
+
     merged = merge_args_with_gym_config(opt, config); env_cfg = config_to_cfg(merged)
-    
+
     env_cfg.filter_visual_rand = True; env_cfg.filter_dataset_saving = True
     env_cfg.sim_cfg = SimulationManagerCfg(headless=merged["headless"], sim_device=merged["device"], enable_rt=merged["enable_rt"], gpu_id=merged["gpu_id"], arena_space=merged["arena_space"])
     return gym.make(id=merged["id"], cfg=env_cfg, action_config=read_json(opt.action_config)), raw
@@ -67,7 +67,7 @@ def as_numpy(value):
 def camera_frame(obs, camera):
     image = as_numpy(obs["sensor"][camera]["color"])[0][..., :3].astype("uint8"); mask = as_numpy(obs["sensor"][camera]["mask"])[0]
     mask = mask[..., 0] if mask.ndim == 3 else mask
-    if image.shape[:2] != mask.shape: 
+    if image.shape[:2] != mask.shape:
         raise ValueError(f"Camera color/mask size mismatch: image={image.shape}, mask={mask.shape}")
     return image, mask
 def save_png(path, image):

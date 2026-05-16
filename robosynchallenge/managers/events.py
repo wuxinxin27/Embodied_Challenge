@@ -274,6 +274,77 @@ def visualize_collision_bodies(
             )
 
 
+def set_articulation_has_gravity(
+    env: EmbodiedEnv,
+    env_ids: torch.Tensor | None,
+    entity_cfg: SceneEntityCfg,
+    has_gravity: bool = False,
+    link_names: List[str] | str | None = None,
+) -> None:
+    """Set gravity on/off for every physical link of an articulation or robot."""
+
+    if isinstance(entity_cfg, dict):
+        entity_cfg = SceneEntityCfg(**entity_cfg)
+
+    asset = env.sim.get_asset(entity_cfg.uid)
+    if asset is None:
+        logger.log_error(
+            f"Cannot set gravity: asset '{entity_cfg.uid}' not found."
+        )
+        return
+
+    if not isinstance(asset, (Articulation, Robot)):
+        logger.log_warning(
+            f"Asset '{entity_cfg.uid}' is type {type(asset)}, not Articulation/Robot. Skipping gravity set."
+        )
+        return
+
+    entities = getattr(asset, "_entities", [])
+    if len(entities) == 0:
+        logger.log_warning(
+            f"Asset '{entity_cfg.uid}' has no loaded entities. Skipping gravity set."
+        )
+        return
+
+    if env_ids is None:
+        target_env_ids = list(range(len(entities)))
+    elif isinstance(env_ids, slice):
+        target_env_ids = list(range(len(entities)))[env_ids]
+    elif isinstance(env_ids, torch.Tensor):
+        target_env_ids = [int(idx) for idx in env_ids.detach().cpu().flatten().tolist()]
+    elif isinstance(env_ids, int):
+        target_env_ids = [env_ids]
+    else:
+        target_env_ids = [int(idx) for idx in env_ids]
+
+    requested_link_names = link_names if link_names is not None else entity_cfg.link_names
+    if requested_link_names is None:
+        resolved_link_names = list(entities[0].get_link_names())
+    else:
+        _, resolved_link_names = resolve_matching_names(
+            requested_link_names,
+            asset.link_names,
+        )
+
+    for env_idx in target_env_ids:
+        if env_idx < 0 or env_idx >= len(entities):
+            logger.log_warning(
+                f"Cannot set gravity for '{entity_cfg.uid}': env index {env_idx} is out of range."
+            )
+            continue
+
+        entity = entities[env_idx]
+        for link_name in resolved_link_names:
+            try:
+                attr = entity.get_physical_attr(link_name)
+                attr.has_gravity = bool(has_gravity)
+                entity.set_physical_attr(attr, link_name)
+            except Exception as exc:
+                logger.log_warning(
+                    f"Failed to set gravity={has_gravity} for '{entity_cfg.uid}/{link_name}' in env {env_idx}: {exc}"
+                )
+
+
 def visualize_affordance_pose(
     env: EmbodiedEnv,
     env_ids: torch.Tensor | None,

@@ -76,7 +76,7 @@ We will use OpenPI as an example to explain how to use data for training and exp
 ### 1. Prepare dataset
 The default configuration provided by RoboSynChallenge supports data collection from Lerobot 3.0, and we provide a script for converting LeRobot 3.0 data to LeRobot 2.1 in [`scripts/convert_lerobot3.0_to_2.1.py`](scripts/convert_lerobot3.0_to_2.1.py).
 If you want to train on multiple datasets together (e.g., multi-task, mixed training with simulated and real data), you can also use the [lerobot-edit-dataset tool](https://huggingface.co/docs/lerobot/using_dataset_tools) to merge datasets.
-Assume the two dataset directories are `/root/workspace/Embodied_Challenge/lerobot_dataset/beaker_mixer_dual/cobotmagic_Sim_beaker_mixer_dual` and `/root/workspace/Embodied_Challenge/lerobot_dataset/beaker_mixer_dual/cobotmagic_Real_beaker_mixer_dual`, you can use the following script and configuration file to merge it into `cobotmagic_merge_beaker_mixer_dual` in the same dir.
+Assume the two dataset directories are `/root/workspace/RoboSynChallenge/lerobot_dataset/beaker_mixer_dual/cobotmagic_Sim_beaker_mixer_dual` and `/root/workspace/RoboSynChallenge/lerobot_dataset/beaker_mixer_dual/cobotmagic_Real_beaker_mixer_dual`, you can use the following script and configuration file to merge it into `cobotmagic_merge_beaker_mixer_dual` in the same dir.
 Create a merge_config.json
 ```
 {
@@ -93,8 +93,8 @@ Create a merge_config.json
 ```
 
 ```shell
-export HF_LEROBOT_HOME=/root/workspace/Embodied_Challenge/
-lerobot-edit-dataset --config_path /root/workspace/Embodied_Challenge/merge_config.json
+export HF_LEROBOT_HOME=/root/workspace/RoboSynChallenge/
+lerobot-edit-dataset --config_path /root/workspace/RoboSynChallenge/merge_config.json
 ```
 
 ### 2. Define training configs and running training

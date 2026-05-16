@@ -549,7 +549,7 @@
                                             {
                                                 "name": "get_offset_pose",
                                                 "kwargs": {
-                                                    "offset_value": 0.1,
+                                                    "offset_value": 0.15,
                                                     "direction": "z",
                                                     "mode": "extrinsic"
                                                 }

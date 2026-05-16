@@ -34,7 +34,7 @@ import tqdm
 SCRIPT_PATH = Path(__file__).resolve()
 WORKSPACE_ROOT = SCRIPT_PATH.parents[2]
 EMBODICHAIN_ROOT = WORKSPACE_ROOT / "EmbodiChain"
-CHALLENGE_ROOT = WORKSPACE_ROOT / "Embodied_Challenge"
+CHALLENGE_ROOT = WORKSPACE_ROOT / "RoboSynChallenge"
 
 for path in (WORKSPACE_ROOT, EMBODICHAIN_ROOT, CHALLENGE_ROOT):
     path_str = str(path)
@@ -49,9 +49,9 @@ POSE_FIELDS = {
 
 
 
-# python3 Embodied_Challenge/scripts/add_lerobot_eef_pose.py \
-#   --dataset Embodied_Challenge/lerobot_dataset/cobotmagic_Sim_manipulate_mixer_dual_046 \
-#   --gym_config Embodied_Challenge/configs/manipulate_pipette/gym_config.json \
+# python3 RoboSynChallenge/scripts/add_lerobot_eef_pose.py \
+#   --dataset RoboSynChallenge/lerobot_dataset/cobotmagic_Sim_manipulate_mixer_dual_046 \
+#   --gym_config RoboSynChallenge/configs/manipulate_pipette/gym_config.json \
 #   --device cuda
 
 def parse_args() -> argparse.Namespace:
@@ -215,16 +215,16 @@ def build_fk_env(gym_config_path: Path, action_config_path: Path | None, args: a
     """Build a minimal EmbodiChain env so robot.compute_fk matches collection."""
 
     import gymnasium as gym
-    import embodied_challenge  # noqa: F401 - registers challenge envs
+    import robosynchallenge  # noqa: F401 - registers challenge envs
     import embodichain.lab.gym.utils.gym_utils as gym_utils
     from embodichain.lab.gym.utils.gym_utils import config_to_cfg
     from embodichain.lab.sim import SimulationManagerCfg
 
     challenge_modules = [
-        "embodied_challenge.managers.actions",
-        "embodied_challenge.managers.datasets",
-        "embodied_challenge.managers.events",
-        "embodied_challenge.managers.observations",
+        "robosynchallenge.managers.actions",
+        "robosynchallenge.managers.datasets",
+        "robosynchallenge.managers.events",
+        "robosynchallenge.managers.observations",
     ]
     for module in challenge_modules:
         if module not in gym_utils.DEFAULT_MANAGER_MODULES:

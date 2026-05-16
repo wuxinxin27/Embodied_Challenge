@@ -240,7 +240,7 @@
         "func": "LeRobotRecorder",
         "mode": "save",
         "params": {
-          "save_path": "/root/workspace/Embodied_Challenge/lerobot_dataset/carry_basket/",
+          "save_path": "/root/workspace/RoboSynChallenge/lerobot_dataset/carry_basket/",
           "robot_meta": {
             "robot_type": "CobotMagic",
             "control_freq": 25,
@@ -255,7 +255,7 @@
             "lang": "Pick the bottle then place it to the basket, carry the basket with the other arm."
           },
           "extra": {
-            "scene_type": "sim",
+            "scene_type": "Sim",
             "task_description": "carry_basket",
             "data_type": "sim"
           },
@@ -596,7 +596,7 @@
       "uid": "milk",
       "shape": {
         "shape_type": "Mesh",
-        "fpath": "/root/workspace/Embodied_Challenge/assets/MilkBox/source/Milk_Packaging.glb",
+        "fpath": "/root/workspace/RoboSynChallenge/assets/MilkBox/source/Milk_Packaging.glb",
         "compute_uv": true
       },
       "attrs": {
@@ -631,7 +631,7 @@
       "uid": "basket",
       "shape": {
         "shape_type": "Mesh",
-        "fpath": "/root/workspace/Embodied_Challenge/assets/Basket/kago3_deform.obj",
+        "fpath": "/root/workspace/RoboSynChallenge/assets/Basket/kago3_deform.obj",
         "compute_uv": true,
         "visual_material": {
           "uid": "basket_mat",

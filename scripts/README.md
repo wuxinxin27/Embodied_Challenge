@@ -1,4 +1,4 @@
-# Embodied_Challenge/scripts 目录说明
+# RoboSynChallenge/scripts 目录说明
 
 本 README 统计了本目录下每个脚本的用途、使用方法及详细使用案例，便于快速查阅和使用。
 
@@ -51,10 +51,9 @@
 - 支持 HuggingFace Hub 数据集快照下载、本地数据集校验、元数据和数据文件批量转换。
 
 **详细案例**：
-- 假设你有一个 v3.0 格式的数据集在 `/root/workspace/Embodied_Challenge/lerobot_dataset/cobotmagic_Sim_items_handover_place_000`，转换命令：
+- 假设你有一个 v3.0 格式的数据集在 `/root/workspace/RoboSynChallenge/lerobot_dataset/cobotmagic_Sim_items_handover_place_000`，转换命令：
   ```bash
-  python convert_lerobot3.0_to_2.1.py --repo-id cobotmagic_Sim_items_handover_place_000 --root /root/workspace/Embodied_Challenge/lerobot_dataset/
-  python convert_lerobot3.0_to_2.1.py --repo-id cobotmagic_Sim_manipulate_pipette --root /root/workspace/Embodied_Challenge/lerobot_dataset/
+  python convert_lerobot3.0_to_2.1.py --repo-id cobotmagic_Sim_items_handover_place_table_height --root /root/workspace/RoboSynChallenge/lerobot_dataset/random/
 
   ```
 - 转换后会在目标目录生成 v2.1 兼容的数据结构和元数据。
@@ -72,11 +71,68 @@ python3 scripts/add_lerobot_eef_pose.py --dataset /path/to/datasets/ --gym_confi
 # 运行
 python3 scripts/add_lerobot_eef_pose.py --dataset /path/to/datasets/ --gym_config /path/to/gym_config.json
 
-python3 scripts/add_lerobot_eef_pose.py --dataset lerobot_dataset/cobotmagic_Sim_beaker_mixer --gym_config configs/beaker_mixer/gym_config_duel.json
+python3 scripts/add_lerobot_eef_pose.py --dataset /root/workspace/RoboSynChallenge/lerobot_dataset/random/cobotmagic_Sim_items_handover_place_table_height --gym_config /root/workspace/RoboSynChallenge/configs/items_handover_place/gym_config_random.json
+
 ```
 ---
 
-## 4. OpenPI pi0 on EmbodiChain
+## 4. Generic Policy Evaluation on EmbodiChain
+
+`scripts/eval_policy.py` is a RoboTwin-style evaluator for EmbodiChain tasks.
+It keeps the same policy adapter contract used by RoboTwin:
+
+```python
+def get_model(usr_args): ...
+def eval(TASK_ENV, model, observation): ...
+def reset_model(model): ...
+```
+
+The difference is that `TASK_ENV` is an EmbodiChain/Gymnasium wrapper. It
+provides RoboTwin-like methods such as `get_obs()`, `take_action(action)`,
+`set_instruction()`, and `get_instruction()`, while internally calling
+`env.reset()` and `env.step()`.
+
+An OpenPI pi0 adapter is provided at `eval_policies/pi0.py`.
+
+### (1). Start OpenPI Server
+
+Run this in one terminal from the local pi0 checkout:
+
+```bash
+cd /home/wu/AA-Program/docker-volume-EmbodiChain/RoboSynChallenge/policy/pi0
+
+uv run scripts/serve_policy.py policy:checkpoint \
+  --policy.config=pi0_base_robosynchallenge_full \
+  --policy.dir=/path/to/your/checkpoint_step_dir \
+  --port=8000 \
+  --default_prompt="perform the task"
+```
+
+### (2). Run Generic Evaluation
+
+Run this in a second terminal from `RoboSynChallenge`:
+
+```bash
+cd /home/wu/AA-Program/docker-volume-EmbodiChain/RoboSynChallenge
+
+python scripts/eval_policy.py \
+  --config configs/eval/pi0_embodichain.yml \
+  --overrides \
+  --task_name beaker_mixer \
+  --gym_config configs/beaker_mixer/gym_config.json \
+  --action_config configs/beaker_mixer/action_config.json \
+  --episodes 10 \
+  --max_steps 500 \
+  --output results/pi0_beaker_mixer_eval.json
+```
+
+To evaluate another task, swap `task_name`, `gym_config`, and `action_config`.
+To add another model, create a new module under `eval_policies/` that exposes
+the same three functions.
+
+---
+
+## 5. OpenPI pi0 on EmbodiChain Legacy Script
 
 This note shows how to run a trained OpenPI pi0 checkpoint as a websocket
 policy server and evaluate it in an EmbodiChain simulation environment.
@@ -84,7 +140,7 @@ policy server and evaluate it in an EmbodiChain simulation environment.
 The evaluation script added here is:
 
 ```bash
-Embodied_Challenge/scripts/eval_openpi0_embodichain.py
+RoboSynChallenge/scripts/eval_openpi0_embodichain.py
 ```
 
 It is designed for OpenPI checkpoints trained with the local
@@ -184,7 +240,7 @@ episode_mean_model_forward_ms
 ## run_env.py
 
 **用途**：
-用于运行 embodied_challenge 环境，支持自定义环境配置、动作配置等。
+用于运行 robosynchallenge 环境，支持自定义环境配置、动作配置等。
 
 **使用方法**：
 - 支持命令行参数，自动加载环境配置。
@@ -197,7 +253,7 @@ episode_mean_model_forward_ms
 **详细案例**：
 - 运行 gym 环境并指定配置：
   ```bash
-  python run_env.py --env-id=embodied_challenge-v0 --config=configs/beaker_mixer/gym_config_duel.json
+  python run_env.py --env-id=robosynchallenge-v0 --config=configs/beaker_mixer/gym_config_duel.json
   ```
 - 支持自定义动作空间、观测空间等高级参数。
 
@@ -213,19 +269,19 @@ episode_mean_model_forward_ms
 **使用方法**：
 先列出配置里的刚体随机化事件：
 ```bash
-python Embodied_Challenge/scripts/analyze_rigid_spawn_range.py \
-  --gym_config Embodied_Challenge/configs/pour_water/gym_config.json \
+python RoboSynChallenge/scripts/analyze_rigid_spawn_range.py \
+  --gym_config RoboSynChallenge/configs/pour_water/gym_config.json \
   --list-events
 ```
 
 分析指定刚体，例如 `bottle`：
 ```bash
 python scripts/analyze_rigid_spawn_range.py \
-  --gym_config configs/beaker_mixer/gym_config_duel.json \
-  --action_config configs/beaker_mixer/action_config_duel.json \
-  --uid beaker \
-  --grid-size 9 9 \
-  --output results/beaker_mixer_spawn_range_report.json \
+  --gym_config configs/carry_basket/gym_config_clear.json \
+  --action_config configs/carry_basket/action_config.json \
+  --uid milk \
+  --grid-size 15 15 \
+  --output results/carry_basket-milk_report.json \
   --list-events
 ```
 
@@ -241,11 +297,11 @@ python scripts/analyze_rigid_spawn_range.py \
 
 如果需要把推荐范围直接写到一份新的配置中：
 ```bash
-python Embodied_Challenge/scripts/analyze_rigid_spawn_range.py \
-  --gym_config Embodied_Challenge/configs/pour_water/gym_config.json \
-  --action_config Embodied_Challenge/configs/pour_water/action_config.json \
+python RoboSynChallenge/scripts/analyze_rigid_spawn_range.py \
+  --gym_config RoboSynChallenge/configs/pour_water/gym_config.json \
+  --action_config RoboSynChallenge/configs/pour_water/action_config.json \
   --uid bottle \
-  --write-gym-config Embodied_Challenge/configs/pour_water/gym_config_bottle_safe.json
+  --write-gym-config RoboSynChallenge/configs/pour_water/gym_config_bottle_safe.json
 ```
 
 默认判据是“专家轨迹能够成功生成”，这会覆盖 `action_config` 中 `get_ik_ret` 等 IK 校验失败的情况。若希望在 Docker 环境内额外复核推荐范围，可加入 `--validation-samples 30`；若希望进一步验证生成后的动作实际执行成功，可加入 `--rollout`。

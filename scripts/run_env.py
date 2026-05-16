@@ -22,7 +22,7 @@ import numpy as np
 import tqdm
 
 import gymnasium as gym
-import embodied_challenge
+import robosynchallenge
 
 from embodichain.lab.gym.utils.gym_utils import (
     add_env_launcher_args_to_parser,
@@ -33,10 +33,10 @@ from embodichain.lab.scripts.run_env import generate_and_execute_action_list, pr
 from embodichain.utils.logger import log_warning, log_info
 
 gym_utils.DEFAULT_MANAGER_MODULES = gym_utils.DEFAULT_MANAGER_MODULES + [
-    "embodied_challenge.managers.actions",
-    "embodied_challenge.managers.datasets",
-    "embodied_challenge.managers.events",
-    "embodied_challenge.managers.observations",
+    "robosynchallenge.managers.actions",
+    "robosynchallenge.managers.datasets",
+    "robosynchallenge.managers.events",
+    "robosynchallenge.managers.observations",
 ]
 
 

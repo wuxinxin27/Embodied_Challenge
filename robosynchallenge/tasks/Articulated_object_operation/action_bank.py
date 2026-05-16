@@ -47,7 +47,7 @@ __all__ = ["ArticulatedobjectoperationActionBank"]
 
 
 class ArticulatedobjectoperationActionBank(ActionBank):
-    
+
     @staticmethod
     @tag_node
     @resolve_env_params
@@ -55,7 +55,7 @@ class ArticulatedobjectoperationActionBank(ActionBank):
         env,
         valid_funcs_name_kwargs_proc: List | None = None,
     ):
-        
+
         left_aim_horizontal_angle = np.arctan2(
             *(
                 (
@@ -77,7 +77,7 @@ class ArticulatedobjectoperationActionBank(ActionBank):
         env,
         valid_funcs_name_kwargs_proc: list | None = None,
     ):
-        
+
         right_aim_horizontal_angle = np.arctan2(
             *(
                 (
@@ -233,6 +233,63 @@ class ArticulatedobjectoperationActionBank(ActionBank):
         ret = np.asarray([stand_still_qpos] * duration)
 
         return ret.T
+
+    @staticmethod
+    def _get_entity_node(entity):
+        if hasattr(entity, "node"):
+            return entity.node
+        if hasattr(entity, "get_node"):
+            return entity.get_node()
+        return entity
+
+    @staticmethod
+    def _set_rigid_object_kinematic(obj):
+        import dexsim
+
+        for entity in getattr(obj, "_entities", []):
+            entity.set_actor_type(dexsim.types.ActorType.KINEMATIC)
+
+    @staticmethod
+    def attach_rigid_objects_now(
+        env,
+        parent_uid: str = "guijiao1",
+        child_uid: str = "guijiao2",
+        set_kinematic: bool = True,
+    ):
+        parent_obj = env.sim.get_rigid_object(parent_uid)
+        child_obj = env.sim.get_rigid_object(child_uid)
+        if parent_obj is None or child_obj is None:
+            logger.log_warning(
+                f"Cannot attach rigid objects: parent={parent_uid}, child={child_uid}."
+            )
+            return False
+
+        if set_kinematic:
+            ArticulatedobjectoperationActionBank._set_rigid_object_kinematic(parent_obj)
+            ArticulatedobjectoperationActionBank._set_rigid_object_kinematic(child_obj)
+
+        parent_entities = getattr(parent_obj, "_entities", [])
+        child_entities = getattr(child_obj, "_entities", [])
+        if len(parent_entities) != len(child_entities):
+            logger.log_warning(
+                f"Attaching {parent_uid} and {child_uid} with different entity counts: "
+                f"{len(parent_entities)} vs {len(child_entities)}."
+            )
+
+        for parent_entity, child_entity in zip(parent_entities, child_entities):
+            parent_node = ArticulatedobjectoperationActionBank._get_entity_node(
+                parent_entity
+            )
+            child_node = ArticulatedobjectoperationActionBank._get_entity_node(
+                child_entity
+            )
+            try:
+                parent_node.attach_node(child_node)
+            except TypeError:
+                parent_node.attach_node(child_entity)
+
+        logger.log_info(f"Attached rigid object '{child_uid}' to '{parent_uid}'.")
+        return True
 
     @staticmethod
     @tag_edge

@@ -20,7 +20,7 @@ from typing import Dict, Optional
 from embodichain.lab.gym.envs import EmbodiedEnv, EmbodiedEnvCfg
 from embodichain.lab.gym.utils.registration import register_env
 from embodichain.utils import logger
-from embodied_challenge.managers.events import visualize_rigid_body_pose
+from robosynchallenge.managers.events import visualize_rigid_body_pose
 from embodichain.lab.gym.envs.tasks.tableware.base_agent_env import BaseAgentEnv
 from .action_bank import (
     ArticulatedobjectoperationActionBank,
@@ -37,6 +37,9 @@ class ArticulatedobjectoperationEnv(EmbodiedEnv):
         action_config = kwargs.get("action_config", None)
         if action_config is not None:
             self.action_config = action_config
+        self._guijiao_attached = False
+        self._guijiao_attach_step = None
+        self._guijiao_attach_schedule_checked = False
 
     def create_demo_action_list(self, *args, **kwargs):
         """
@@ -88,6 +91,8 @@ class ArticulatedobjectoperationEnv(EmbodiedEnv):
             logger.log_warning("Failed to generate expert demo action list.")
             return None
 
+        # self._schedule_guijiao_attach_after_edge("L_splice_to_align")
+
         # TODO: to be removed, need a unified interface in robot class
         left_arm_joints = self.robot.get_joint_ids(name="left_arm", remove_mimic=True)
         right_arm_joints = self.robot.get_joint_ids(name="right_arm", remove_mimic=True)
@@ -122,6 +127,57 @@ class ArticulatedobjectoperationEnv(EmbodiedEnv):
                         active_idx = global_to_active_idx[joint_id]
                         actions[:, 0, active_idx] = local_action_data[:, i]
         return actions
+
+    def _schedule_guijiao_attach_after_edge(self, edge_name: str):
+        self._guijiao_attached = False
+        self._guijiao_attach_step = None
+        self._guijiao_attach_schedule_checked = True
+        package_infos = getattr(self, "packages", {}).get("packages", [])
+        for package in package_infos:
+            if package.get("label") == edge_name:
+                self._guijiao_attach_step = int(package["end"])
+                logger.log_info(
+                    f"Scheduled guijiao attach after edge '{edge_name}' "
+                    f"at step {self._guijiao_attach_step}."
+                )
+                return
+        logger.log_warning(f"Cannot schedule guijiao attach: edge '{edge_name}' not found.")
+
+    def _ensure_guijiao_attach_schedule(self):
+        if self._guijiao_attach_schedule_checked:
+            return
+        if not hasattr(self, "packages"):
+            action_config = getattr(self, "action_config", None)
+            if action_config is None:
+                self._guijiao_attach_schedule_checked = True
+                return
+            self._init_action_bank(ArticulatedobjectoperationActionBank, action_config)
+        self._schedule_guijiao_attach_after_edge("L_splice_to_align")
+
+    def _run_guijiao_attach_if_ready(self):
+        self._ensure_guijiao_attach_schedule()
+        if getattr(self, "_guijiao_attached", False):
+            return
+        trigger_step = getattr(self, "_guijiao_attach_step", None)
+        if trigger_step is None:
+            return
+
+        current_step = int(torch.min(self._elapsed_steps).item())
+        if current_step < trigger_step:
+            return
+
+        ArticulatedobjectoperationActionBank.attach_rigid_objects_now(
+            self,
+            parent_uid="guijiao1",
+            child_uid="guijiao2",
+            set_kinematic=True,
+        )
+        self._guijiao_attached = True
+
+    # def step(self, action, **kwargs):
+    #     self._run_guijiao_attach_if_ready()
+    #     return super().step(action, **kwargs)
+
     ##################################################################################################################
     def is_task_success(self, **kwargs) -> torch.Tensor:
         """Determine if the task is successfully completed. This is mainly used in the data generation process

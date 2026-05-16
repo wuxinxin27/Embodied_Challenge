@@ -166,7 +166,7 @@
                 "func": "LeRobotRecorder",
                 "mode": "save",
                 "params": {
-                    "save_path": "/root/workspace/Embodied_Challenge/lerobot_dataset/pour_water_dual/",
+                    "save_path": "/root/workspace/RoboSynChallenge/lerobot_dataset/pour_water_dual/",
                     "robot_meta": {
                         "robot_type": "CobotMagic",
                         "control_freq": 25,
@@ -388,7 +388,7 @@
             "uid":"bottle",
             "shape": {
                 "shape_type": "Mesh",
-                "fpath": "/root/workspace/Embodied_Challenge/assets/bottle/bottle.obj",
+                "fpath": "/root/workspace/RoboSynChallenge/assets/bottle/bottle.obj",
                 "compute_uv": false
             },
             "attrs" : {

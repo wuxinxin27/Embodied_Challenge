@@ -19,7 +19,7 @@ from typing import Dict, Optional, Sequence
 
 from embodichain.lab.gym.envs import EmbodiedEnv, EmbodiedEnvCfg
 from embodichain.lab.gym.utils.registration import register_env
-from embodied_challenge.managers.events import visualize_affordance_pose
+from robosynchallenge.managers.events import visualize_affordance_pose
 from embodichain.utils import logger
 
 from embodichain.lab.gym.envs.tasks.tableware.base_agent_env import BaseAgentEnv
